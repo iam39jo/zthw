@@ -11,15 +11,46 @@
 
 \begin{document}
 \begin{CJK*}{UTF8}{song}
+	
+	\newcommand{\chuhao}{\fontsize{42pt}{\baselineskip}\selectfont}
+	\newcommand{\xiaochuhao}{\fontsize{36pt}{\baselineskip}\selectfont}
+	\newcommand{\yihao}{\fontsize{28pt}{\baselineskip}\selectfont}
+	\newcommand{\erhao}{\fontsize{21pt}{\baselineskip}\selectfont}
+	\newcommand{\xiaoerhao}{\fontsize{18pt}{\baselineskip}\selectfont}
+	\newcommand{\sanhao}{\fontsize{15.75pt}{\baselineskip}\selectfont}
+	\newcommand{\sihao}{\fontsize{14pt}{\baselineskip}\selectfont}
+	\newcommand{\xiaosihao}{\fontsize{12pt}{1.3\baselineskip}\selectfont}
+	\newcommand{\wuhao}{\fontsize{10.5pt}{1.3\baselineskip}\selectfont}
+	\newcommand{\xiaowuhao}{\fontsize{9pt}{\baselineskip}\selectfont}
+	\newcommand{\liuhao}{\fontsize{7.875pt}{\baselineskip}\selectfont}
+	\newcommand{\qihao}{\fontsize{5.25pt}{\baselineskip}\selectfont}
 
 	\title{{\Large{\CJKfamily{hei}Linux程序设计项目个人报告}}}
-	\author{张涛 00648331}
-	\date{}
+	\author{张涛 \\ 00648331}
+	\date{June 2009}
 	\maketitle
 
-	\section{项目说明}
-	\par缩进测试：卡斯劳动纠纷卡及塑料袋附件阿克萨来得及发牢骚快点放假阿斯兰快点放假阿斯兰快点放假阿龙索快点放假
-	\par私服哦角色的
+	\section{\large{项目承担任务说明}}
+	\xiaosihao本次课程项目中，我和马舒浩、陈方亮同学一起选择合作，打算开发一个小型的多文件类型阅读器，以提供对多种格式文档的统一阅读方式。
+
+	本次项目开发中，我承担的任务是对文档阅读器的{\CJKfamily{hei}缓存管理部分}和{\CJKfamily{hei}书签/附注内容管理部分}设计以及实现。本缓存模块主要用于将打开的文档文件抽象为上层用户可方便操作的字节页面；同时，通过合理的缓存机制，使得对文档的翻页以及跳转浏览过程中，尽量提高响应速度。
+
+	\begin{itemize}
+		\item{{\CJKfamily{hei}缓存管理部分}}
+			\begin{itemize}
+				\item{数据组织形式：\wuhao在缓存管理模块内部以链表形式存储，存储的基本单位为页面（这里的页面与用户界面显示页面没有直接关系，只是一个组织单位；页面的大小由文件接口模块根据文件类型确定）。提供的基本读操作也以页为基本单位。}
+				\item{模块进展：\wuhao由于本模块属于项目关键模块之一，所以此模块开发属于项目第一阶段开发目标之一。在五月中，此模块基本功能已经实现，可以向上层提供相应服务。不过由于项目一直没有完成合并，所以我暂时只能用自己编写的测试代码进行调试改善。虽说项目最终由于接口未能达成一致，导致没有得到一个整体可运行的软件，但是基本每个模块都已经是完成了的。}
+				\item{TODO：\wuhao按照我最初的设计目标，本模块在项目合并之后还有一些地方可以进一步完善，比如一个更有效率的缓存链表管理机制，以实现简单而有效的页管理，同时要避免内存泄漏的发生(此部分对内存动态分配较多)。由于正文内容是只读的，所以暂时无须考虑内存硬盘内容一致问题。}
+			\end{itemize}
+		\item{{\CJKfamily{hei}书签/附注管理部分}}
+			\begin{itemize}
+				\item{数据组织形式：\wuhao采用双向链表，顺序与书签/附注在文档中的位置顺序一致，提供双向移动以及插入删除操作}
+				\item{外部文件存储方式：\wuhao使用轻量级的嵌入式数据库sqlite3进行书签/附注存储，分别保存书签/附注所在页面编号、页内偏移以及文字内容。存储的数据库文件名及路径由用户界面指定，当不存在时创建新的数据库文件。}
+				\item{TODO：\wuhao对书签/附注的组织也实现缓存方式，以提高书签/附注访问效率。这里需要注意书签/附注是可读写的，所以需要注意更新时保持一致性的问题。}
+			\end{itemize}
+	\end{itemize}
+
+	从自己个人的角度，陈述你自己的开源项目总结报告。注意该报告不是小组报告，主要陈述自己的工作、自己的理解和收获、教训。
 
 \end{CJK*}
 \end{document}
