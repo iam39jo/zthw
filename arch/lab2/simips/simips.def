@@ -1,0 +1,125 @@
+/*
+  These are defined in myisa.h
+
+#define RS              ((inst >> 16) & 0x1f)
+#define RT              ((inst >> 11) & 0x1f)   
+#define RD              ((inst >> 21) & 0x1f)
+
+#define IMME            (inst & 0xffff)
+*/
+
+/*
+DEFLINK(ALUREG_LINK, 0x00, "alureg_link", 0, 0x3f)
+*/
+
+
+#define ADD_IMPL							\
+  {									\
+	SET_GPR(RD,GPR(RS)+GPR(RT));					\
+  }
+DEFINST(ADD,			0x01,
+	"add",			"",
+	NA,			F_TRAP,
+	DNA, DNA, DNA,		DNA, DNA, DNA, DNA)
+
+#define ADDI_IMPL							\
+  {									\
+	SET_GPR(RD,GPR(RS)+IMME);					\
+  }
+DEFINST(ADDI,			0x02,
+	"addi",			"",
+	NA,			F_TRAP,
+	DNA, DNA, DNA,		DNA, DNA, DNA, DNA)
+
+#define LW_IMPL								\
+  {									\
+	enum md_fault_type _fault;					\
+	word_t _result;							\
+									\
+	_result = READ_WORD(GPR(RS)+OFFSET,_fault );			\
+	if(_fault != md_fault_none)					\
+		DECLARE_FAULT(_fault);					\
+	SET_GPR(RD, _result);						\
+  }
+DEFINST(LW,			0x03,
+	"lw",			"",
+	NA,			F_TRAP,
+	DNA, DNA, DNA,		DNA, DNA, DNA, DNA)
+
+#define SW_IMPL								\
+  {									\
+	enum md_fault_type _fault;					\
+									\
+	WRITE_WORD(GPR(RD),GPR(RS)+OFFSET,_fault );			\
+	if(_fault != md_fault_none)					\
+		DECLARE_FAULT(_fault);					\
+  }
+DEFINST(SW,			0x04,
+	"sw",			"",
+	NA,			F_TRAP,
+	DNA, DNA, DNA,		DNA, DNA, DNA, DNA)
+
+#define SWP_IMPL							\
+  {									\
+	int tmp;							\
+	tmp = GPR(RS);							\
+	SET_GPR(RS, GPR(RD));						\
+	SET_GPR(RD, tmp);						\
+  }
+DEFINST(SWP,			0x05,
+	"swp",			"",
+	NA,			F_TRAP,
+	DNA, DNA, DNA,		DNA, DNA, DNA, DNA)
+
+#define SUB_IMPL			\
+	{										\
+		SET_GPR(RD,GPR(RS)-GPR(RT));		\
+	}
+DEFINST(SUB, 0x07,
+		"sub", "",
+		IntALU,	F_TRAP,
+		DNA, DNA, DNA, DNA, DNA, DNA, DNA)
+
+#define J_IMPL		\
+	{								\
+		SET_NPC(CPC+IMME);		\
+	}
+DEFINST(J,		0x11,
+		"j",	"",
+		NA,		F_TRAP,
+		DNA, DNA, DNA, DNA, DNA, DNA, DNA)
+
+#define SWI_IMPL							\
+  {									\
+	SYSCALL(inst);							\
+  }
+DEFINST(SWI,			0x3f,
+	"swi",			"",
+	NA,			F_TRAP,
+	DNA, DNA, DNA,		DNA, DNA, DNA, DNA)
+
+/*
+CONNECT(ALUREG_LINK)
+#define ADD_IMPL							\
+  {									\
+	SET_GPR(RD,GPR(RS)+GPR(RT));					\
+  }
+DEFINST(ADD,			0x20,
+	"add",			"",
+	IntALU,			F_ICOMP,
+	DNA,DNA,DNA,		DNA,DNA,DNA,DNA)
+*/
+
+#undef SUB_IMPL
+#undef ADD_IMPL
+#undef ADDI_IMPL
+#undef LW_IMPL
+#undef SW_IMPL
+#undef SWP_IMPL
+#undef SWI_IMPL
+/*#undef ADD_IMPL*/
+
+#undef DEFINST
+#undef DEFLINK
+#undef CONNECT
+#undef DEFUOP
