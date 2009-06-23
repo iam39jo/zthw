@@ -22,7 +22,7 @@ CODE SEG:
 
 	lw	$5,	4($4)
 	lw	$6,	8($4)
-	swp	$5,	$6
+#	swp	$5,	$6
 	sw	$5,	4($4)
 	sw	$6,	8($4)			#swap numbers and restore
 
