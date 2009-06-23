@@ -1,16 +1,20 @@
 /*
-  These are defined in myisa.h
+  These are defined in simips.h
 
-#define RS              ((inst >> 16) & 0x1f)
-#define RT              ((inst >> 11) & 0x1f)   
-#define RD              ((inst >> 21) & 0x1f)
+#define RS              ((inst >> 21) & 0x1f)
+#define RT              ((inst >> 16) & 0x1f)   
+#define RD              ((inst >> 11) & 0x1f)
 
 #define IMME            (inst & 0xffff)
+
+#define SHIFT_SHAMT ((inst >> 7) & 0x1f)
 */
 
 /*
 DEFLINK(ALUREG_LINK, 0x00, "alureg_link", 0, 0x3f)
 */
+
+DEFLINK(ALURTYPE_LINK, 0X00, "alu_r-type_link", 0x3f, 0)
 
 
 #define ADD_IMPL							\
