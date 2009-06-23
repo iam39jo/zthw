@@ -24,12 +24,13 @@ def get_imm(token):
 
 def parse_instr(statement):
     instr_fields = oneline.split(None, 1)
-    if instr_fields[0].strip() == "sll":
+    instr_fields[0] = instr_fields[0].strip()
+    if instr_fields[0] == "sll":
         op_fields = instr_fields[1].split(',')
 
         return 0
 
-    elif instr_fields[0].strip() == "add":
+    elif instr_fields[0] == "add":
         op_fields = instr_fields[1].split(',')
         op_rd = get_reg_no(op_fields[0])
         op_rs = get_reg_no(op_fields[1])
@@ -37,19 +38,33 @@ def parse_instr(statement):
         instruction = (0b000000 << 26) | (0b100000);
         instruction = instruction | (op_rs << 21) | (op_rt << 16) | (op_rd << 11)
         return instruction
+    
+    elif instr_fields[0] == "sub":
+        op_fields = instr_fields[1].split(',')
+        op_rd = get_reg_no(op_fields[0])
+        op_rs = get_reg_no(op_fields[1])
+        op_rt = get_reg_no(op_fields[2])
+        instruction = (0b000000 << 26) | (0b100010);
+        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (op_rd << 11)
+        return instruction
 
-    elif instr_fields[0].strip() == "addi":
+    elif instr_fields[0] == "addi":
         op_fields = instr_fields[1].split(',')
         op_rs = get_reg_no(op_fields[1])
         op_rt = get_reg_no(op_fields[0])
         imme = get_imm(op_fields[2].strip())
-        instruction = (0b001000 << 26);
-        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (imme)
+        instruction = (0b001000 << 26)
+        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (imme & 0xffff)
         return instruction
 
-    elif instr_fields[0].strip() == "beq":
+    elif instr_fields[0] == "beq":
         op_fields = instr_fields[1].split(',')
-        return 0
+        op_rs = get_reg_no(op_fields[0])
+        op_rt = get_reg_no(op_fields[1])
+        imme = get_imm(op_fields[2].strip())
+        instruction = (0b000100 << 26)
+        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (imme & 0xffff)
+        return instruction
 
     elif instr_fields[0].strip() == "sw":
         op_fields = instr_fields[1].split(',')
@@ -57,20 +72,23 @@ def parse_instr(statement):
         imme = get_imm(op_fields[1][0:op_fields[1].find('(')])
         op_rs = get_reg_no(op_fields[1][op_fields[1].find('(')+1:op_fields[1].find(')')])
         instruction = (0b101011 << 26);
-        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (imme)
+        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (imme & 0xffff)
         return instruction 
 
-    elif instr_fields[0].strip() == "lw":
+    elif instr_fields[0] == "lw":
         op_fields = instr_fields[1].split(',')
         op_rt = get_reg_no(op_fields[0])
         imme = get_imm(op_fields[1][0:op_fields[1].find('(')])
         op_rs = get_reg_no(op_fields[1][op_fields[1].find('(')+1:op_fields[1].find(')')])
         instruction = (0b100011 << 26);
-        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (imme)
+        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (imme & 0xffff)
         return instruction
 
-    elif instr_fields[0].strip() == "swi":
-        return 0
+    elif instr_fields[0] == "swi":
+        imme = get_imm(instr_fields[1].strip())
+        instruction = (0b111111 << 26);
+        instruction = instruction | (imme);
+        return instruction
 
     else:
         print("Invalid instruction @ "+str(lineno)+": "+oneline)
@@ -78,13 +96,16 @@ def parse_instr(statement):
 
 for oneline in fin:
     lineno = lineno + 1
-    oneline=oneline.strip()
+    oneline = oneline.strip()
 
     if len(oneline) == 0:
         continue
 
+    ## Clear comments
     if oneline[0] == '#':
         continue
+    oneline = oneline.split('#')[0].strip()
+
 
     if parser_status == 0:
         if oneline == "DATA SEG:":
@@ -92,7 +113,8 @@ for oneline in fin:
             continue
         elif oneline == "CODE SEG:":
             parser_status = 10
-            fout.write("0"+'\n')
+            # write the delimiter for data segment
+            fout.write(delimiter+'\n')
             continue
         else:
             print("Unexpected token @ "+str(lineno)+": "+oneline)
