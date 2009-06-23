@@ -12,16 +12,25 @@ void gen_data_seg(FILE *fin);
 
 void gen_code_seg(FILE *fin);
 
-int main()
+int main(int argc, char *argv[])
 {
 	FILE *fin;
 	FILE *fout;
+
+	if (argc < 3) {
+		printf("Usage: bin-gen objfile binfile\nGenerate executable file for simips machine\n");
+		return 2;
+	}
 
 	data_len = 0;
 	code_len = 0;
 	pos = 2;
 
-	fin = fopen("my.txt", "r");
+	fin = fopen(argv[1], "r");
+	if (!fin) {
+		fprintf(stderr, "Error open file %s\n", argv[1]);
+		return 3;
+	}
 	gen_data_seg(fin);
 	gen_code_seg(fin);
 	fclose(fin);
@@ -29,7 +38,7 @@ int main()
 	buffer[0] = data_len+code_len;
 	buffer[1] = (data_len<<2)+0x200;
 
-	fout = fopen("my.bin", "wb");
+	fout = fopen(argv[2], "wb");
 	fwrite((void *)buffer, sizeof(unsigned int), pos, fout);
 	fclose(fout);
 
