@@ -5,11 +5,11 @@
 
 DATA SEG:
 #number(length) of numbers (count in words)
-	2
+	9
 #first number
-	1
+	1,123,1234,3455,13123,121,5,2412,123
 #second number
-	2
+
 DATA END
 
 CODE SEG:
