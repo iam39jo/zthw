@@ -272,6 +272,7 @@ extern unsigned int md_op2flags[];
 #define RD		((inst >> 11) & 0x1f)
 
 #define IMME		(inst & 0xffff)
+#define MSHAMT ((inst >> 6) & 0x1f)
 
 /* register shift accessors */
 #define SHIFT_BITS	((inst >> 4) & 0xff)
