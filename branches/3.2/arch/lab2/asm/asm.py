@@ -119,18 +119,20 @@ for oneline in fin:
         else:
             print("Unexpected token @ "+str(lineno)+": "+oneline)
             exit()
-
+            
+            
     if parser_status == 1:
-        if oneline.isalnum():
-            fout.write(oneline+'\n')
-            continue
-        elif oneline == "DATA END":
+        if oneline == "DATA END":
             parser_status = 2
             fout.write(delimiter+'\n')
             continue
-        else:
-            print("Invalid numberic @ "+str(lineno)+": "+oneline)
-            exit()
+        for eachnum in oneline.split(','):
+            if eachnum.isalnum():
+                fout.write(eachnum+'\n')
+                continue
+            else:
+                print("Invalid numberic @ "+str(lineno)+": "+oneline)
+                exit()
 
     if parser_status == 2:
         if oneline == "CODE SEG:":
