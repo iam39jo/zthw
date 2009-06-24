@@ -18,20 +18,38 @@ DEFLINK(ALUREG_LINK, 0x00, "alureg_link", 0, 0x3f)
 
 DEFLINK(ALURTYPE_LINK, 0x00, "alu_r-type_link", 0, 0x3f)
 
+#define J_IMPL		\
+	{								\
+		SET_NPC((CPC&0xfc000000)|(IMME26));	\
+	}
+DEFINST(J,	0x02,
+		"j",	"",
+		NA,	F_TRAP,
+		DNA, DNA, DNA, DNA, DNA ,DNA, DNA)
+
 #define BEQ_IMPL		\
 	{									\
 		if (RS == RT)		\
-			SET_NPC(CPC+4+(IMME<<2));		\
+			SET_NPC(CPC+4+(SEXT(IMME)<<2));		\
 	}
 DEFINST(BEQ,		0x04,
 		"beq",		"",
 		NA,		F_TRAP,
 		DNA, DNA, DNA,	DNA, DNA, DNA, DNA)
 
+#define BNE_IMPL		\
+	{									\
+		if (RS != RT)		\
+			SET_NPC(CPC+4+(SEXT(IMME)<<2));		\
+	}
+DEFINST(BNE,		0x05,
+		"bne",		"",
+		NA,		F_TRAP,
+		DNA, DNA, DNA,	DNA, DNA, DNA, DNA)
 
 #define ADDI_IMPL							\
   {									\
-		SET_GPR(RT,GPR(RS)+IMME);					\
+		SET_GPR(RT,GPR(RS)+SEXT(IMME));					\
   }
 DEFINST(ADDI,			0x08,
 	"addi",			"",
@@ -91,6 +109,15 @@ DEFINST(SWI,			0x3f,
 
 CONNECT(ALURTYPE_LINK)
 
+#define SLL_IMPL			\
+	{										\
+		SET_GPR(RD, GPR(RS)<<MSHAMT);	\
+	}
+DEFINST(SLL, 0x00,
+		"sll",	"",
+		IntALU, F_TRAP,
+		DNA, DNA, DNA, DNA, DNA, DNA, DNA)
+
 #define ADD_IMPL							\
   {									\
 	SET_GPR(RD,GPR(RS)+GPR(RT));					\
@@ -107,6 +134,15 @@ DEFINST(ADD,			0x20,
 DEFINST(SUB, 0x22,
 		"sub", "",
 		IntALU,	F_TRAP,
+		DNA, DNA, DNA, DNA, DNA, DNA, DNA)
+
+#define SLT_IMPL	\
+	{								\
+		SET_GPR(RD, GPR(RS)<GPR(RT)?1:0);	\
+	}
+DEFINST(SLT,	0x2a,
+		"slt",	"",
+		IntALU, F_TRAP,
 		DNA, DNA, DNA, DNA, DNA, DNA, DNA)
 
 /*
@@ -129,6 +165,8 @@ DEFINST(ADD,			0x20,
 #undef SW_IMPL
 #undef SWP_IMPL
 #undef SWI_IMPL
+#undef SLT_IMPL
+#undef SLL_IMPL
 /*#undef ADD_IMPL*/
 
 #undef DEFINST
