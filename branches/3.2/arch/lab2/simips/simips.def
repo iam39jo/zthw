@@ -29,7 +29,7 @@ DEFINST(J,	0x02,
 
 #define BEQ_IMPL		\
 	{									\
-		if (RS == RT)		\
+		if (GPR(RS) == GPR(RT))		\
 			SET_NPC(CPC+4+(SEXT(IMME)<<2));		\
 	}
 DEFINST(BEQ,		0x04,
@@ -39,7 +39,7 @@ DEFINST(BEQ,		0x04,
 
 #define BNE_IMPL		\
 	{									\
-		if (RS != RT)		\
+		if (GPR(RS) != GPR(RT))		\
 			SET_NPC(CPC+4+(SEXT(IMME)<<2));		\
 	}
 DEFINST(BNE,		0x05,

@@ -15,10 +15,30 @@ CODE SEG:
 	swi		3
 
 	sll		$4, $4, 2
-	add		$4, $4, $2		#up-lim of array
+	add		$4, $4, $1		#up-lim of array
+	addi	$5,	$1,	4			#for j = 1 to lenA, $5:j
 
-	addi		$5,	$2,	4
+	slt		$10, $5, $4
+	beq		$10, $0, 15		#to for-end
 
+	lw		$6,	 0($5)		#$6:key
+	addi	$7,	 $5, -4		#$7:i
 
+	slt		$10, $3, $7
+	beq		$10, $0, 7		#to end-while
+	lw		$8, 0($7)
+	slt		$10, $6, $8
+	beq		$10, $0, 4		#to end-while
+	addi	$9, $7, 4
+	sw		$8, 0($9)
+	addi	$7, $7, -4
+	beq		$0, $0, -9			#start-while
+
+	addi	$9, $7, 4
+	sw		$6, 0($9)
+	addi	$5, $5, 4
+	beq		$0, $0, -17
+	
+	swi 	2
 	swi		1
 CODE END
