@@ -5,9 +5,9 @@
 
 DATA SEG:
 #number(length) of numbers (count in words)
-	9
+	2
 #first number
-	1,123,1234,3455,13123,121,5,2412,123
+	1,2
 #second number
 
 DATA END
@@ -19,11 +19,11 @@ CODE SEG:
 	add 	$2,	$3,	$0
 	addi	$1,	$4,	4
 	swi	2				#display origion numbers, should be 1 2
+	swi	3
 
 	lw	$5,	4($4)
 	lw	$6,	8($4)
-	sub	$6,	$5,$6
-	beq	$5,	$6, 2
+	j	0x21c
 	sw	$5,	4($4)
 	sw	$6,	8($4)			#swap numbers and restore
 

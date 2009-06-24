@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
+import sys
 import string
-
-fin=open('my.s', 'r')
-fout=open('my.txt', 'wb')
 
 data_len = 0
 code_len = 0
@@ -16,26 +14,44 @@ def get_reg_no(token):
 
 def get_imm(token):
     if token[0:2] == "0x" or token[0:2] == "0X":
-        return int(token, 16)
+        num = int(token, 16)
     elif token[0:2] == "0b" or token[0:2] == "0B":
-        return int(token, 2)
+        num = int(token, 2)
     else:
-        return int(token)
+        num = int(token)
+    if (num < 0):
+        num = 2**16+num
+    return num
+
+def get_imm26(token):
+    if token[0:2] == "0x" or token[0:2] == "0X":
+        num = int(token, 16)
+    elif token[0:2] == "0b" or token[0:2] == "0B":
+        num = int(token, 2)
+    else:
+        num = int(token)
+    if (num < 0):
+        print("Error j type")
+    return num
 
 def parse_instr(statement):
     instr_fields = oneline.split(None, 1)
     instr_fields[0] = instr_fields[0].strip()
     if instr_fields[0] == "sll":
         op_fields = instr_fields[1].split(',')
-
-        return 0
+        op_rd = get_reg_no(op_fields[0])
+        op_rs = get_reg_no(op_fields[1])
+        shamt = get_imm(op_fields[2].strip())
+        instruction = (0b000000 << 26) | (0b000000)
+        instruction = instruction | (op_rs << 21) | (op_rd << 11) | ((shamt&0x1f) << 6)
+        return instruction
 
     elif instr_fields[0] == "add":
         op_fields = instr_fields[1].split(',')
         op_rd = get_reg_no(op_fields[0])
         op_rs = get_reg_no(op_fields[1])
         op_rt = get_reg_no(op_fields[2])
-        instruction = (0b000000 << 26) | (0b100000);
+        instruction = (0b000000 << 26) | (0b100000)
         instruction = instruction | (op_rs << 21) | (op_rt << 16) | (op_rd << 11)
         return instruction
     
@@ -45,6 +61,15 @@ def parse_instr(statement):
         op_rs = get_reg_no(op_fields[1])
         op_rt = get_reg_no(op_fields[2])
         instruction = (0b000000 << 26) | (0b100010);
+        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (op_rd << 11)
+        return instruction
+
+    elif instr_fields[0] == "slt":
+        op_fields = instr_fields[1].split(',')
+        op_rd = get_reg_no(op_fields[0])
+        op_rs = get_reg_no(op_fields[1])
+        op_rt = get_reg_no(op_fields[2])
+        instruction = (0b000000 << 26) | (0b101010);
         instruction = instruction | (op_rs << 21) | (op_rt << 16) | (op_rd << 11)
         return instruction
 
@@ -64,6 +89,22 @@ def parse_instr(statement):
         imme = get_imm(op_fields[2].strip())
         instruction = (0b000100 << 26)
         instruction = instruction | (op_rs << 21) | (op_rt << 16) | (imme & 0xffff)
+        return instruction
+
+    elif instr_fields[0] == "bne":
+        op_fields = instr_fields[1].split(',')
+        op_rs = get_reg_no(op_fields[0])
+        op_rt = get_reg_no(op_fields[1])
+        imme = get_imm(op_fields[2].strip())
+        instruction = (0b000100 << 26)
+        instruction = instruction | (op_rs << 21) | (op_rt << 16) | (imme & 0xffff)
+        return instruction
+
+    elif instr_fields[0] == "j":
+        op_fields = instr_fields[1].split(',')
+        imme = get_imm26(op_fields[0].strip())
+        instruction = (0b000010 << 26)
+        instruction = instruction | (imme & 0x3fffff)
         return instruction
 
     elif instr_fields[0].strip() == "sw":
@@ -93,6 +134,14 @@ def parse_instr(statement):
     else:
         print("Invalid instruction @ "+str(lineno)+": "+oneline)
         exit(2)
+
+###############################################################
+if len(sys.argv) < 3:
+    print("Usage: parse.py asm-file objfile\nParse simisp assembler file to object file for \"bin-gen\"")
+    exit(3)
+
+fin=open(sys.argv[1], 'r')
+fout=open(sys.argv[2], 'wb')
 
 for oneline in fin:
     lineno = lineno + 1
@@ -131,7 +180,7 @@ for oneline in fin:
                 fout.write(eachnum+'\n')
                 continue
             else:
-                print("Invalid numberic @ "+str(lineno)+": "+oneline)
+                print("Invalid number @ "+str(lineno)+": "+oneline)
                 exit()
 
     if parser_status == 2:

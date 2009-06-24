@@ -18,7 +18,8 @@ int main(int argc, char *argv[])
 	FILE *fout;
 
 	if (argc < 3) {
-		printf("Usage: bin-gen objfile binfile\nGenerate executable file for simips machine\n");
+		printf("Usage: bin-gen objfile binfile\n\
+				\rGenerate executable file for simips machine\n");
 		return 2;
 	}
 

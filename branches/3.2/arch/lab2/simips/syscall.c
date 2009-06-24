@@ -275,9 +275,10 @@ int getdirentries(int fd, char *buf, int nbytes, long *basep);
 
 /* Syscall numbers */
 
-#define MYISA_SYS_ni_syscall	0
-#define MYISA_SYS_exit			1
-#define MYISA_SYS_print			2
+#define SIMIPS_SYS_ni_syscall	0
+#define SIMIPS_SYS_exit			1
+#define SIMIPS_SYS_print			2
+#define SIMIPS_SYS_delim		3
 
 /* internal system call buffer size, used primarily for file name arguments,
    argument larger than this will be truncated */
@@ -349,12 +350,12 @@ sys_syscall(struct regs_t *regs,	/* registers to access */
 
   switch (syscode)
     {
-    case MYISA_SYS_exit:
+    case SIMIPS_SYS_exit:
       /* exit jumps to the target set in main() */
       longjmp(sim_exit_buf,/* exitcode + fudge */0);
       break;
 
-    case MYISA_SYS_print:
+    case SIMIPS_SYS_print:
       {
 	     md_addr_t _begin_addr;
 	     word_t _length;
@@ -370,6 +371,12 @@ sys_syscall(struct regs_t *regs,	/* registers to access */
 		     printf("%d\n", data[i]);
       }
       break;
+
+		case SIMIPS_SYS_delim:
+			{
+				printf("----------------------\n");
+				break;
+			}
 
     default:
       warn("invalid/unimplemented syscall %d, PC=0x%08p, winging it",

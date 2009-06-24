@@ -272,6 +272,7 @@ extern unsigned int md_op2flags[];
 #define RD		((inst >> 11) & 0x1f)
 
 #define IMME		(inst & 0xffff)
+#define IMME26	(inst & 0x3ffffff)
 #define MSHAMT ((inst >> 6) & 0x1f)
 
 /* register shift accessors */
@@ -299,6 +300,8 @@ extern unsigned int md_op2flags[];
 #define OFS		((word_t)(inst & 0xffff))
 #define SEXT(X)								\
   (((X) & 0x8000) ? ((word_t)(X) | (0xffff0000)) : (word_t)(X))
+#define SEXT26(X)			\
+	(((X)	& 0x2000000) ? ((word_t)(X) | (0xfc000000)) : (word_t)(X))
 #define OFFSET 		SEXT( (inst & 0xffff) )	
 
 #define JOFFSET		( (word_t)((inst & 0x03ffffff) <<2 ))
