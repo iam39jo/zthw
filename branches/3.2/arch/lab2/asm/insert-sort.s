@@ -1,8 +1,8 @@
 # insert sort program using simips instruction set
 
 DATA SEG:
-	10	#number count
-	12,45,1,4,7,5,0,3,80,2		#numbers going to sort
+	20	#number count
+	2783,24,100,88,11,12,45,1,4,7,5,0,3,80,2,24234,43,493,21,2		#numbers going to sort
 DATA END
 
 CODE SEG:
