@@ -22,6 +22,11 @@ struct axis {
 	float v;
 };
 
+struct cube_info {
+	int start;
+	int length;
+};
+
 int cal(FILE *fp);
 
 int main(int argc, char *argv[])
@@ -69,6 +74,8 @@ int violent(int count, float radius, struct axis *points, float *sum)
 	int i, j;
 
 	float radius2 = radius*radius;
+	float up_lim;
+	int cube_idx;
 
 	struct axis **ptr_array = (struct axis **) malloc(sizeof(struct axis *) * count);
 
@@ -76,6 +83,12 @@ int violent(int count, float radius, struct axis *points, float *sum)
 		ptr_array[i] = &points[i];
 
 	qsort(ptr_array, count, sizeof(struct axis *), cmp_x);
+	for (i = 0, up_lim = R, cube_idx = 0; i < count; i++) {
+		if (ptr_array[i].x <= up_lim)
+
+
+
+
 	qsort(ptr_array, count, sizeof(struct axis *), cmp_y);
 	qsort(ptr_array, count, sizeof(struct axis *), cmp_z);
 
