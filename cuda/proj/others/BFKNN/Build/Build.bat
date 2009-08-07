@@ -1,0 +1,1 @@
+nvcc BFKNN.cu -o ../Bin/BFKNN
