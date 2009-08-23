@@ -20,6 +20,7 @@ struct axis {
 	float y;
 	float z;
 	float v;
+	float re;
 };
 
 struct cube_info {
@@ -115,9 +116,11 @@ int cal(FILE *fp)
 	sum = (float *) malloc(sizeof(float)*point_count);
 	memset((void *) sum, 0x0, sizeof(float)*point_count);
 
-	for (i = 0; i < point_count; i++)
+	for (i = 0; i < point_count; i++) {
 		fscanf(fp, "%f %f %f %f", &points[i].x,	&points[i].y, 
 				&points[i].z, &points[i].v);
+		points[i].re = 0;
+	}
 
 	/* execute calculation and get time stamp */
 	gettimeofday(&tv_start, NULL);
