@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#define POINT_COUNT 10000000
+#define POINT_COUNT 1000
 
 int main(int argc, char * argv[])
 {
