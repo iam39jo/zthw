@@ -148,10 +148,13 @@ void divideIntoCubes(int count, struct axis **ptr_array, struct cube_info cubes[
 			cubes[cube_idx][0][0].length = len;
 			cube_idx++;
 			// the start idx of next cube block
-			cubes[cube_idx][0][0].start = i;
+			if (cube_idx < CUBE_PER_EDGE)
+					cubes[cube_idx][0][0].start = i;
 			len = 0;
 		}
 	}
+	// update the latest length
+	cubes[cube_idx][0][0].length = len;
 
 	for (i = 0; i < CUBE_PER_EDGE; i++) {
 		qsort(&ptr_array[cubes[i][0][0].start], cubes[i][0][0].length, sizeof(struct axis *), cmp_y);
@@ -163,15 +166,17 @@ void divideIntoCubes(int count, struct axis **ptr_array, struct cube_info cubes[
 			if (ptr_array[j]->y <= up_lim) {
 				len++;
 			} else {
-				cubes[i][cube_idx][0].start = j;
 				if (up_lim >= 1)				//debug
 					exit(1);
 				up_lim += R;
 				cubes[i][cube_idx][0].length = len;
 				cube_idx++;
+				if (cube_idx < CUBE_PER_EDGE)
+					cubes[i][cube_idx][0].start = j;
 				len = 0;
 			}
 		}
+		cubes[i][cube_idx][0].length = len;
 	}
 
 	for (i = 0; i < CUBE_PER_EDGE; i++) {
@@ -180,20 +185,22 @@ void divideIntoCubes(int count, struct axis **ptr_array, struct cube_info cubes[
 			up_lim = R;
 			cube_idx = 0;
 			len = 0;
-			cube_uplim = cubes[i][j][0].start + start+cubes[i][j][0].length;
+			cube_uplim = cubes[i][j][0].start + cubes[i][j][0].length;
 			for (k = cubes[i][j][0].start; k < cube_uplim; k++) {
 				if (ptr_array[k]->z <= up_lim) {
 					len++;
 				} else {
-					cubes[i][j][cube_idx].start = k;
 					if (up_lim >= 1)
 						exit(1);
 					up_lim += R;
 					cubes[i][j][cube_idx].length = len;
 					cube_idx++;
+					if (cube_idx < CUBE_PER_EDGE)
+						cubes[i][j][cube_idx].start = k;
 					len = 0;
 				}
 			}
+			cubes[i][j][cube_idx].length = len;
 		}
 	}
 }
