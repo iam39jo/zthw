@@ -17,6 +17,8 @@
 #define CUBE_NUM 1000
 #define CUBE_PER_EDGE 10
 
+#define BLOCK_SIZE 256
+
 struct axis {
 	float x;
 	float y;
@@ -52,63 +54,36 @@ int main(int argc, char *argv[])
 }
 
 
-__device__ float distance(struct axis *p1, struct axis *p2)
+__device__ float distance2(struct axis *p1, struct axis *p2)
 {
 	return (p1->x - p2->x) * (p1->x - p2->x) +
 		(p1->y - p2->y) * (p1->y - p2->y) +
 		(p1->z - p2->z) * (p1->z - p2->z);
 }
 
-/*
- *__global__ void threadCode(int count, float radius2, struct axis *points, float *result)
- *{
- *    int thId;
- *    int i;
- *    [>float tmp_rst;<]
- *    int base_idx;
- *    int tmp_idx;
- *
- *    __shared__ struct axis block_elem[BLOCK_SIZE];
- *    __shared__ struct axis sh_data[SHARE_CACHE];
- *    __shared__ float sh_rst[BLOCK_SIZE];
- *
- *    thId = threadIdx.x + blockIdx.x*BLOCK_SIZE;
- *    sh_rst[threadIdx.x] = 0;
- *
- *    for (base_idx = 0; base_idx <= count; base_idx += SHARE_CACHE) {
- *
- *        int up_lim = count - base_idx;
- *        up_lim = up_lim>SHARE_CACHE ? SHARE_CACHE : up_lim;
- *
- *        __syncthreads();
- *
- *        [>tmp_idx = threadIdx.x*2;<]
- *        [>sh_data[tmp_idx] = points[base_idx+tmp_idx];<]
- *        [>++tmp_idx;<]
- *        [>sh_data[tmp_idx] = points[base_idx+tmp_idx];<]
- *        if (threadIdx.x == 0) {
- *            for (tmp_idx = 0; tmp_idx < SHARE_CACHE; tmp_idx++) {
- *                sh_data[tmp_idx] = points[base_idx+tmp_idx];
- *            }
- *        }
- *        __syncthreads();
- *
- *        if (thId >= count)
- *            return;
- *        block_elem[threadIdx.x] = points[thId];
- *
- *
- *        [>tmp_rst = 0;<]
- *        for (i = 0; i < up_lim; i++) {
- *            if ((base_idx+i) != thId &&
- *                    distance(&block_elem[threadIdx.x], &sh_data[i]) <= radius2) {
- *                sh_rst[threadIdx.x] += sh_data[i].v;
- *            }
- *        }
- *    }
- *    result[thId] = sh_rst[threadIdx.x];
- *}
- */
+__global__ void threadCode(int count, int range, float radius2, struct axis *points, float *result, struct cube_info ***cubes)
+{
+	__shared__ int lower_lim, upper_lim;
+	__shared__ int x_lower, x_upper, y_lower, y_upper, z_lower, z_upper;
+	int cube_x, cube_y, cube_z;
+	int i;
+
+	lower_lim = cubes[blockIdx.x][blockIdx.y][blockIdx.z].start;
+	upper_lim = cubes[blockIdx.x][blockIdx.y][blockIdx.z].start+cubes[blockIdx.x][blockIdx.y][blockIdx.z].length;
+	x_lower = blockIdx.x - range; x_lower = x_lower < 0 ? 0 : x_lower;
+	y_lower = blockIdx.y - range; y_lower = y_lower < 0 ? 0 : y_lower;
+	z_lower = blockIdx.z - range; z_lower = z_lower < 0 ? 0 : z_lower;
+	x_upper = blockIdx.x + range; x_upper = x_upper < CUBE_PER_EDGE ? x_upper : CUBE_PER_EDGE-1;
+	y_upper = blockIdx.y + range; y_upper = y_upper < CUBE_PER_EDGE ? y_upper : CUBE_PER_EDGE-1;
+	z_upper = blockIdx.z + range; z_upper = z_upper < CUBE_PER_EDGE ? z_upper : CUBE_PER_EDGE-1;
+
+	__syncthreads();
+
+	for (i = lower_lim; i < upper_lim; i++)
+
+	/*thId = threadIdx.x + blockIdx.x*BLOCK_SIZE;*/
+	/*sh_rst[threadIdx.x] = 0;*/
+}
 
 int cmp_x(const void *a, const void *b)
 {
@@ -250,26 +225,54 @@ void divideIntoCubes(int count, int *idx_array, struct axis *points, struct cube
 		/*DB("%f %f %f", points[idx_array[i]].x, points[idx_array[i]].y, points[idx_array[i]].z);*/
 }
 
+void copyCubes(struct cube_info ***cudaCubes, struct cube_info cubes[CUBE_PER_EDGE][CUBE_PER_EDGE][CUBE_PER_EDGE])
+{
+	int i, j;
+	void *tmpPtr1[CUBE_PER_EDGE];
+	void *tmpPtr2[CUBE_PER_EDGE];
+
+	for (i = 0; i < CUBE_PER_EDGE; i++) {
+		cudaMalloc(&tmpPtr1[i], sizeof(struct cube_info *) * CUBE_PER_EDGE);
+		
+		for (j = 0; j < CUBE_PER_EDGE; j++) {
+			cudaMalloc(&tmpPtr2[j], sizeof(struct cube_info) * CUBE_PER_EDGE);
+			cudaMemcpy(tmpPtr2[j], (void *) cubes[i][j], sizeof(struct cube_info) * CUBE_PER_EDGE, cudaMemcpyHostToDevice);
+		}
+
+		cudaMemcpy(tmpPtr1[i], (void *) tmpPtr2, sizeof(struct cube_info *) * CUBE_PER_EDGE, cudaMemcpyHostToDevice);
+	}
+		cudaMemcpy((void *) cudaCubes, (void *) tmpPtr1, sizeof(struct cube_info **) * CUBE_PER_EDGE, cudaMemcpyHostToDevice);
+}
+
+void freeCubes(struct cube_info ***cudaCubes)
+{
+	return;
+}
+
 int paralize(int count, float radius, struct axis *points, float *results)
 {
-	/*float *cudaRst;*/
+	float *cudaRst;
 	struct axis *cudaPtr;
+	struct cube_info ***cudaCubes;
 	struct axis *tmpPoints;
+	float *tmpResult;
 	struct cube_info cubes[CUBE_PER_EDGE][CUBE_PER_EDGE][CUBE_PER_EDGE];
 	/*struct axis **ptr_array = (struct axis **) malloc(sizeof(struct axis *) * count);*/
 	int i;
 	int *idx_array = (int *) malloc(sizeof(int) * count);
 	tmpPoints = (struct axis *) malloc(sizeof(struct axis) * count);
+	tmpResult = (float *) malloc(sizeof(float) * count);
 
+	/*
+	   divide points into cubes
+   */
 	for (i = 0; i < count; i++)
 		idx_array[i] = i;
 	divideIntoCubes(count, idx_array, points, cubes);
-
 	for (i = 0; i < count; i++)
 		tmpPoints[i] = points[idx_array[i]];
-
-	for (i = cubes[0][0][0].start; i < cubes[0][0][0].start+cubes[0][0][0].length; i++)
-		DB("%d %f %f %f", i, tmpPoints[i].x, tmpPoints[i].y, tmpPoints[i].z);
+	/*for (i = cubes[0][0][0].start; i < cubes[0][0][0].start+cubes[0][0][0].length; i++)*/
+		/*DB("%d %f %f %f", i, tmpPoints[i].x, tmpPoints[i].y, tmpPoints[i].z);*/
 		
 
 	/*int j, k, z;*/
@@ -282,20 +285,28 @@ int paralize(int count, float radius, struct axis *points, float *results)
 			/*}*/
 
 	cudaMalloc((void **)&cudaPtr, sizeof(struct axis)*count);
-	/*cudaMalloc((void **)&cudaRst, sizeof(float)*count);*/
+	cudaMalloc((void **)&cudaRst, sizeof(float)*count);
+	cudaMalloc((void **)&cudaCubes, sizeof(struct cube_info **) * CUBE_PER_EDGE);
 
 	cudaMemcpy(cudaPtr, points, sizeof(struct axis)*count, cudaMemcpyHostToDevice);
-	/*cudaMemset(cudaRst, 0x0, sizeof(float)*count);*/
+	cudaMemcpy(cudaCubes, cubes, sizeof(struct cube_info)*count, cudaMemcpyHostToDevice);
+	cudaMemset(cudaRst, 0x0, sizeof(float)*count);
+	copyCubes(cudaCubes, cubes);
 
-	/*dim3 dimBlock(BLOCK_SIZE, 1, 1);*/
-	/*dim3 dimGrid((count+BLOCK_SIZE-1)/BLOCK_SIZE, 1, 1);*/
-	/*threadCode<<<dimGrid, dimBlock>>>(count, radius*radius, cudaPtr, cudaRst);*/
+	dim3 dimBlock(BLOCK_SIZE, 1, 1);
+	dim3 dimGrid(CUBE_PER_EDGE, CUBE_PER_EDGE, CUBE_PER_EDGE);
+	threadCode<<<dimGrid, dimBlock>>>(count, (radius + R)/R, radius*radius, cudaPtr, cudaRst, cudaCubes);
 	
-	/*cudaMemcpy(sum, cudaRst, sizeof(float)*count, cudaMemcpyDeviceToHost);*/
-	cudaMemcpy(points, cudaPtr, sizeof(struct axis)*count, cudaMemcpyDeviceToHost);
+	cudaMemcpy(tmpResult, cudaRst, sizeof(float)*count, cudaMemcpyDeviceToHost);
+	for (i = 0; i < count; i++)
+		results[idx_array[i]] = tmpResult[i];
+	/*cudaMemcpy(points, cudaPtr, sizeof(struct axis)*count, cudaMemcpyDeviceToHost);*/
+	freeCubes(cudaCubes);
 	cudaFree(cudaPtr);
-	/*cudaFree(cudaRst);*/
+	cudaFree(cudaRst);
 	free(idx_array);
+	free(tmpPoints);
+	free(tmpResult);
 	return 0;
 }
 
@@ -313,7 +324,7 @@ int cal(FILE *fp)
 
 	orig_data = (struct axis *) malloc(sizeof(struct axis)*point_count);
 	results = (float *) malloc(sizeof(float)*point_count);
-	memset((void *) results, 0x0, sizeof(float)*point_count);
+	/*memset((void *) results, 0x0, sizeof(float)*point_count);*/
 
 	for (i = 0; i < point_count; i++) {
 		fscanf(fp, "%f %f %f %f", &orig_data[i].x,	&orig_data[i].y, 
