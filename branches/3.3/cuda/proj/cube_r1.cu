@@ -61,25 +61,41 @@ __device__ float distance2(struct axis *p1, struct axis *p2)
 		(p1->z - p2->z) * (p1->z - p2->z);
 }
 
-__global__ void threadCode(int count, int range, float radius2, struct axis *points, float *result, struct cube_info ***cubes)
+__global__ void threadCode(int count, int range, float radius2, struct axis *points, float *results, struct cube_info ***cubes)
 {
 	__shared__ int lower_lim, upper_lim;
 	__shared__ int x_lower, x_upper, y_lower, y_upper, z_lower, z_upper;
 	int cube_x, cube_y, cube_z;
-	int i;
+	int i, j;
 
 	lower_lim = cubes[blockIdx.x][blockIdx.y][blockIdx.z].start;
 	upper_lim = cubes[blockIdx.x][blockIdx.y][blockIdx.z].start+cubes[blockIdx.x][blockIdx.y][blockIdx.z].length;
 	x_lower = blockIdx.x - range; x_lower = x_lower < 0 ? 0 : x_lower;
 	y_lower = blockIdx.y - range; y_lower = y_lower < 0 ? 0 : y_lower;
 	z_lower = blockIdx.z - range; z_lower = z_lower < 0 ? 0 : z_lower;
-	x_upper = blockIdx.x + range; x_upper = x_upper < CUBE_PER_EDGE ? x_upper : CUBE_PER_EDGE-1;
-	y_upper = blockIdx.y + range; y_upper = y_upper < CUBE_PER_EDGE ? y_upper : CUBE_PER_EDGE-1;
-	z_upper = blockIdx.z + range; z_upper = z_upper < CUBE_PER_EDGE ? z_upper : CUBE_PER_EDGE-1;
+	x_upper = blockIdx.x + range+1; x_upper = x_upper < CUBE_PER_EDGE ? x_upper : CUBE_PER_EDGE;
+	y_upper = blockIdx.y + range+1; y_upper = y_upper < CUBE_PER_EDGE ? y_upper : CUBE_PER_EDGE;
+	z_upper = blockIdx.z + range+1; z_upper = z_upper < CUBE_PER_EDGE ? z_upper : CUBE_PER_EDGE;
 
 	__syncthreads();
 
-	for (i = lower_lim; i < upper_lim; i++)
+	/*for (i = lower_lim; i < upper_lim; i++) ;*/
+
+	for (cube_x = x_lower; cube_x < x_upper; cube_x++) {
+		for (cube_y = y_lower; cube_y < y_upper; cube_y++) {
+			for (cube_z = z_lower; cube_z < z_upper; cube_z++) {
+				int cube_lower = cubes[cube_x][cube_y][cube_z].start;
+				int cube_upper = cubes[cube_x][cube_y][cube_z].start + cubes[cube_x][cube_y][cube_z].length;
+
+				for (i = cube_lower; i < cube_upper; i++) {
+					for (j = lower_lim; j < upper_lim; j++) {
+						if (i != j && distance2(&points[i], &points[j]) <= radius2)
+							results[j] += points[i].v;
+					}
+				}
+			}
+		}
+	}
 
 	/*thId = threadIdx.x + blockIdx.x*BLOCK_SIZE;*/
 	/*sh_rst[threadIdx.x] = 0;*/
