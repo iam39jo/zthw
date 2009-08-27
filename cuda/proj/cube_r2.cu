@@ -103,6 +103,8 @@ __global__ void threadCode(int count, int range, float radius2, struct axis *poi
 						if (i != j && distance2(&points[i], &points[j]) <= radius2)
 							results[j] += points[i].v;
 					}
+
+					__syncthreads();
 				}
 			}
 		}
@@ -322,7 +324,7 @@ int paralize(int count, float radius, struct axis *points, float *results)
 	cudaMemset(cudaRst, 0x0, sizeof(float)*count);
 	copyCubes(cudaCubes, cubes);
 
-	dim3 dimBlock(1, 1, 1);
+	dim3 dimBlock(BLOCK_SIZE, 1, 1);
 	/*dim3 dimGrid(CUBE_PER_EDGE, CUBE_PER_EDGE, CUBE_PER_EDGE);*/
 	dim3 dimGrid(CUBE_PER_EDGE, CUBE_PER_EDGE*CUBE_PER_EDGE, 1);
 	threadCode<<<dimGrid, dimBlock>>>(count, (radius + R)/R, radius*radius, cudaPtr, cudaRst, cudaCubes);
