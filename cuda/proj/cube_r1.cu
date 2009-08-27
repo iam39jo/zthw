@@ -76,7 +76,7 @@ __global__ void threadCode(int count, int range, float radius2, struct axis *poi
 	__syncthreads();
 
 	/*DB("%d %d %d", this_x, this_y, this_z);*/
-	results[1] = 1.0;
+	/*results[1] = 1.0;*/
 
 	lower_lim = cubes[this_x][this_y][this_z].start;
 	upper_lim = cubes[this_x][this_y][this_z].start+cubes[this_x][this_y][this_z].length;
@@ -329,8 +329,8 @@ int paralize(int count, float radius, struct axis *points, float *results)
 	threadCode<<<dimGrid, dimBlock>>>(count, (radius + R)/R, radius*radius, cudaPtr, cudaRst, cudaCubes);
 	
 	cudaMemcpy(tmpResult, cudaRst, sizeof(float)*count, cudaMemcpyDeviceToHost);
-	for (i = 0; i < count; i++)
-		DB("%f", tmpResult[i]);
+	/*for (i = 0; i < count; i++)*/
+		/*DB("%f", tmpResult[i]);*/
 	for (i = 0; i < count; i++)
 		results[idx_array[i]] = tmpResult[i];
 	/*cudaMemcpy(points, cudaPtr, sizeof(struct axis)*count, cudaMemcpyDeviceToHost);*/
