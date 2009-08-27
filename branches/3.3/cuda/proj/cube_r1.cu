@@ -67,41 +67,47 @@ __global__ void threadCode(int count, int range, float radius2, struct axis *poi
 	__shared__ int x_lower, x_upper, y_lower, y_upper, z_lower, z_upper;
 	int cube_x, cube_y, cube_z;
 	int i, j;
-	int this_x, this_y, this_z;
+	__shared__ int this_x, this_y, this_z;
 
-	DB("%d %d %d", blockIdx.x, blockIdx.y, blockIdx.z);
+	this_x = blockIdx.x;
+	this_y = blockIdx.y/10;
+	this_z = blockIdx.y%10;
+
+	__syncthreads();
+
+	/*DB("%d %d %d", this_x, this_y, this_z);*/
 	results[1] = 1.0;
 
-	/*lower_lim = cubes[blockIdx.x][blockIdx.y][blockIdx.z].start;*/
-	/*upper_lim = cubes[blockIdx.x][blockIdx.y][blockIdx.z].start+cubes[blockIdx.x][blockIdx.y][blockIdx.z].length;*/
-	/*x_lower = blockIdx.x - range; x_lower = x_lower < 0 ? 0 : x_lower;*/
-	/*y_lower = blockIdx.y - range; y_lower = y_lower < 0 ? 0 : y_lower;*/
-	/*z_lower = blockIdx.z - range; z_lower = z_lower < 0 ? 0 : z_lower;*/
-	/*x_upper = blockIdx.x + range+1; x_upper = x_upper < CUBE_PER_EDGE ? x_upper : CUBE_PER_EDGE;*/
-	/*y_upper = blockIdx.y + range+1; y_upper = y_upper < CUBE_PER_EDGE ? y_upper : CUBE_PER_EDGE;*/
-	/*z_upper = blockIdx.z + range+1; z_upper = z_upper < CUBE_PER_EDGE ? z_upper : CUBE_PER_EDGE;*/
+	lower_lim = cubes[this_x][this_y][this_z].start;
+	upper_lim = cubes[this_x][this_y][this_z].start+cubes[this_x][this_y][this_z].length;
+	x_lower = this_x - range; x_lower = x_lower < 0 ? 0 : x_lower;
+	y_lower = this_y - range; y_lower = y_lower < 0 ? 0 : y_lower;
+	z_lower = this_z - range; z_lower = z_lower < 0 ? 0 : z_lower;
+	x_upper = this_x + range+1; x_upper = x_upper < CUBE_PER_EDGE ? x_upper : CUBE_PER_EDGE;
+	y_upper = this_y + range+1; y_upper = y_upper < CUBE_PER_EDGE ? y_upper : CUBE_PER_EDGE;
+	z_upper = this_z + range+1; z_upper = z_upper < CUBE_PER_EDGE ? z_upper : CUBE_PER_EDGE;
 
-	/*__syncthreads();*/
+	__syncthreads();
 
-	/*for (i = lower_lim; i < upper_lim; i++) ;*/
+	for (i = lower_lim; i < upper_lim; i++) ;
 
-	/*DB("%d %d %d %d %d", blockIdx.x, blockIdx.y, blockIdx.z, lower_lim, upper_lim);*/
+	DB("%d %d %d %d %d", this_x, this_y, this_z, lower_lim, upper_lim);
 
-	/*for (cube_x = x_lower; cube_x < x_upper; cube_x++) {*/
-		/*for (cube_y = y_lower; cube_y < y_upper; cube_y++) {*/
-			/*for (cube_z = z_lower; cube_z < z_upper; cube_z++) {*/
-				/*int cube_lower = cubes[cube_x][cube_y][cube_z].start;*/
-				/*int cube_upper = cubes[cube_x][cube_y][cube_z].start + cubes[cube_x][cube_y][cube_z].length;*/
+	for (cube_x = x_lower; cube_x < x_upper; cube_x++) {
+		for (cube_y = y_lower; cube_y < y_upper; cube_y++) {
+			for (cube_z = z_lower; cube_z < z_upper; cube_z++) {
+				int cube_lower = cubes[cube_x][cube_y][cube_z].start;
+				int cube_upper = cubes[cube_x][cube_y][cube_z].start + cubes[cube_x][cube_y][cube_z].length;
 
-				/*for (i = cube_lower; i < cube_upper; i++) {*/
-					/*for (j = lower_lim; j < upper_lim; j++) {*/
-						/*if (i != j && distance2(&points[i], &points[j]) <= radius2)*/
-							/*results[j] += points[i].v;*/
-					/*}*/
-				/*}*/
-			/*}*/
-		/*}*/
-	/*}*/
+				for (i = cube_lower; i < cube_upper; i++) {
+					for (j = lower_lim; j < upper_lim; j++) {
+						if (i != j && distance2(&points[i], &points[j]) <= radius2)
+							results[j] += points[i].v;
+					}
+				}
+			}
+		}
+	}
 
 	/*thId = threadIdx.x + blockIdx.x*BLOCK_SIZE;*/
 	/*sh_rst[threadIdx.x] = 0;*/
@@ -317,7 +323,7 @@ int paralize(int count, float radius, struct axis *points, float *results)
 
 	dim3 dimBlock(1, 1, 1);
 	/*dim3 dimGrid(CUBE_PER_EDGE, CUBE_PER_EDGE, CUBE_PER_EDGE);*/
-	dim3 dimGrid(2, 2, 1);
+	dim3 dimGrid(CUBE_PER_EDGE, CUBE_PER_EDGE*CUBE_PER_EDGE, 1);
 	threadCode<<<dimGrid, dimBlock>>>(count, (radius + R)/R, radius*radius, cudaPtr, cudaRst, cudaCubes);
 	
 	cudaMemcpy(tmpResult, cudaRst, sizeof(float)*count, cudaMemcpyDeviceToHost);
