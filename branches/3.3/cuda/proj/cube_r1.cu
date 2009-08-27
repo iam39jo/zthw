@@ -91,7 +91,7 @@ __global__ void threadCode(int count, int range, float radius2, struct axis *poi
 
 	for (i = lower_lim; i < upper_lim; i++) ;
 
-	DB("%d %d %d %d %d", this_x, this_y, this_z, lower_lim, upper_lim);
+	/*DB("%d %d %d %d %d", this_x, this_y, this_z, lower_lim, upper_lim);*/
 
 	for (cube_x = x_lower; cube_x < x_upper; cube_x++) {
 		for (cube_y = y_lower; cube_y < y_upper; cube_y++) {
@@ -299,6 +299,8 @@ int paralize(int count, float radius, struct axis *points, float *results)
 	divideIntoCubes(count, idx_array, points, cubes);
 	for (i = 0; i < count; i++)
 		tmpPoints[i] = points[idx_array[i]];
+
+	fprintf(stderr, "Sort complete\n");
 	/*for (i = cubes[0][0][0].start; i < cubes[0][0][0].start+cubes[0][0][0].length; i++)*/
 		/*DB("%d %f %f %f", i, tmpPoints[i].x, tmpPoints[i].y, tmpPoints[i].z);*/
 		
