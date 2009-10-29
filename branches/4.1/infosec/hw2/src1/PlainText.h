@@ -1,6 +1,8 @@
 #ifndef __PLAINTEXT_H__
 #define __PLAINTEXT_H__
 
+#include "types.h"
+
 #define BLOCK_BIT_SIZE 128
 #define BLOCK_BYTE_SIZE 16
 
