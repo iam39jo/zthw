@@ -2,7 +2,7 @@
 #include <string.h>
 #include <malloc.h>
 
-#include "aes.h"
+#include "AES.h"
 #include "types.h"
 
 const ubyte_t sbox[256] = {
@@ -353,7 +353,7 @@ void AESEncrypt(ubyte_t * input, ubyte_t * key, ubyte_t * output, int Nb, int Nk
 	free(key_pool);
 }
 
-void AESDEncrypt(ubyte_t * input, ubyte_t * key, ubyte_t * output, int Nb, int Nk, int Nr)
+void AESDecrypt(ubyte_t * input, ubyte_t * key, ubyte_t * output, int Nb, int Nk, int Nr)
 {
 	int length_text = Nb * 4;
 	ubyte_t * key_pool;
@@ -455,7 +455,7 @@ int main()
 			printf("\n");
 	}
 	printf("\n");
-	AESDEncrypt(plain1, key, plain2, 4, 4, 10);
+	AESDecrypt(plain1, key, plain2, 4, 4, 10);
 	for (i = 0; i < 16; ++i) {
 		printf("0x%02x, ", plain2[i]);
 		if (!((i+1) % 4))
