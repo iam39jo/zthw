@@ -310,7 +310,7 @@ void InvKeyExpansion(ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
 	}
 }
 
-void AESEncrypt(ubyte_t * output, ubyte_t * key, int Nb, int Nk, int Nr)
+void AESEncrypt(ubyte_t * output, const ubyte_t * key, int Nb, int Nk, int Nr)
 {
 	int length_text = Nb * 4;
 	ubyte_t * key_pool;
@@ -353,7 +353,7 @@ void AESEncrypt(ubyte_t * output, ubyte_t * key, int Nb, int Nk, int Nr)
 	free(key_pool);
 }
 
-void AESDecrypt(ubyte_t * output, ubyte_t * key, int Nb, int Nk, int Nr)
+void AESDecrypt(ubyte_t * output, const ubyte_t * key, int Nb, int Nk, int Nr)
 {
 	int length_text = Nb * 4;
 	ubyte_t * key_pool;
@@ -396,6 +396,8 @@ void AESDecrypt(ubyte_t * output, ubyte_t * key, int Nb, int Nk, int Nr)
 
 	free(key_pool);
 }
+
+#ifdef AES_DEBUG
 
 int main()
 {
@@ -465,3 +467,5 @@ int main()
 	return 0;
 
 }
+
+#endif
