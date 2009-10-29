@@ -1,0 +1,23 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AESEncrypt	aes.c	/^void AESEncrypt(ubyte_t * input, ubyte_t * key, ubyte_t * output, int Nb, int Nk, int Nr)$/;"	f	signature:(ubyte_t * input, ubyte_t * key, ubyte_t * output, int Nb, int Nk, int Nr)
+AddRoundKey	aes.c	/^void AddRoundKey(ubyte_t * state, ubyte_t * key, int length)$/;"	f	signature:(ubyte_t * state, ubyte_t * key, int length)
+GF_Mul_X2	aes.c	/^unsigned char GF_Mul_X2(unsigned char a)$/;"	f	signature:(unsigned char a)
+GF_Mul_X3	aes.c	/^unsigned char GF_Mul_X3(unsigned char a)$/;"	f	signature:(unsigned char a)
+KeyExpansion	aes.c	/^void KeyExpansion(ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)$/;"	f	signature:(ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
+MixColumns	aes.c	/^void MixColumns(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
+ROW_COUNT	aes.h	4;"	d
+Rcon	aes.c	/^ubyte_t Rcon[] = { 0x01, 0x02, 0x04, 0x08,$/;"	v
+ShiftRows	aes.c	/^void ShiftRows(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
+SubBytes	aes.c	/^void SubBytes(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
+__AES_H__	aes.h	2;"	d
+__TYPES_H__	types.h	2;"	d
+main	aes.c	/^int main()$/;"	f
+sbox	aes.c	/^unsigned char sbox[256] = {$/;"	v
+ubyte_t	types.h	/^typedef unsigned char ubyte_t;$/;"	t
+uword_t	types.h	/^typedef unsigned int uword_t;$/;"	t
+xtime	aes.c	/^unsigned char xtime(unsigned char a, unsigned char b)$/;"	f	signature:(unsigned char a, unsigned char b)
