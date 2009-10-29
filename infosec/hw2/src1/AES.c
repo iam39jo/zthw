@@ -310,13 +310,13 @@ void InvKeyExpansion(ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
 	}
 }
 
-void AESEncrypt(ubyte_t * input, ubyte_t * key, ubyte_t * output, int Nb, int Nk, int Nr)
+void AESEncrypt(ubyte_t * output, ubyte_t * key, int Nb, int Nk, int Nr)
 {
 	int length_text = Nb * 4;
 	ubyte_t * key_pool;
 	int i, j;
 
-	memcpy(output, input, sizeof(ubyte_t) * length_text);
+//	memcpy(output, input, sizeof(ubyte_t) * length_text);
 	key_pool = (ubyte_t *) malloc(sizeof(ubyte_t)*length_text*(Nr+1));
 
 	KeyExpansion(key, key_pool, Nk, Nb, Nr);
@@ -353,13 +353,13 @@ void AESEncrypt(ubyte_t * input, ubyte_t * key, ubyte_t * output, int Nb, int Nk
 	free(key_pool);
 }
 
-void AESDecrypt(ubyte_t * input, ubyte_t * key, ubyte_t * output, int Nb, int Nk, int Nr)
+void AESDecrypt(ubyte_t * output, ubyte_t * key, int Nb, int Nk, int Nr)
 {
 	int length_text = Nb * 4;
 	ubyte_t * key_pool;
 	int i, j;
 
-	memcpy(output, input, sizeof(ubyte_t) * length_text);
+//	memcpy(output, input, sizeof(ubyte_t) * length_text);
 	key_pool = (ubyte_t *) malloc(sizeof(ubyte_t)*length_text*(Nr+1));
 
 	InvKeyExpansion(key, key_pool, Nk, Nb, Nr);
@@ -448,16 +448,16 @@ int main()
 	}
 	printf("\n");
 	/*AddRoundKey(plain, key_pool+16, 16);*/
-	AESEncrypt(plain, key, plain1, 4, 4, 10);
+	AESEncrypt(plain, key, 4, 4, 10);
 	for (i = 0; i < 16; ++i) {
-		printf("0x%02x, ", plain1[i]);
+		printf("0x%02x, ", plain[i]);
 		if (!((i+1) % 4))
 			printf("\n");
 	}
 	printf("\n");
-	AESDecrypt(plain1, key, plain2, 4, 4, 10);
+	AESDecrypt(plain, key, 4, 4, 10);
 	for (i = 0; i < 16; ++i) {
-		printf("0x%02x, ", plain2[i]);
+		printf("0x%02x, ", plain[i]);
 		if (!((i+1) % 4))
 			printf("\n");
 	}
