@@ -1,0 +1,17 @@
+# BCH Encoder/Decoder
+
+gcc data_generator.c -o data.exe
+gcc bch_encoder.c -o bch_encoder.exe
+gcc error.c -o error.exe
+gcc bch_decoder.c -o bch_decoder.exe
+
+MM=13
+KK=4096
+TT=8
+PP=8
+EE=16
+
+./data -n $KK > data_in.txt
+./bch_encoder -m $MM -k $KK -t $TT -p $PP < data_in.txt > data_codeword.txt
+./error -e $EE < data_codeword.txt > data_error.txt
+./bch_decoder -m $MM -k $KK -t $TT -p $PP < data_error.txt > data_out.txt
