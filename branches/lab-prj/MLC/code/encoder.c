@@ -44,6 +44,7 @@
 
 
 #include "BCH_Global.c"
+#include "data.h"
 
 int bb[rr_max] ;		// Parity checks
 
@@ -176,6 +177,8 @@ int main(int argc,  char** argv)
 			kk_shorten = kk_shorten - kk_shorten % 4 ;
 			nn_shorten = kk_shorten + rr ;
 		}
+
+		printf("[DEBUG] rr = %d\n", rr);
 		
 		fprintf(stdout, "{# (m = %d, n = %d, k = %d, t = %d) Binary BCH code.}\n", mm, nn_shorten, kk_shorten, tt) ;
 		
@@ -189,9 +192,13 @@ int main(int argc,  char** argv)
 			{	while ((in_char != EOF) && ((char)in_char != '}'))
 					in_char = getchar();
 			}
+			if (in_char == '}')
+				in_char = getchar();
 			in_v = hextoint(in_char);		
 			if (in_v != -1)
-			{	for (i = 3; i >= 0; i--) 
+			{
+				//fprintf(stderr, "%d %d\n", in_v, in_count);
+				for (i = 3; i >= 0; i--) 
 				{	if ((int)pow(2,i) & in_v)
 						data[in_count] = 1 ;
 					else
@@ -206,9 +213,12 @@ int main(int argc,  char** argv)
 				parallel_encode_bch() ;
 				
 				print_hex_low(kk_shorten, data, stdout);
-				fprintf(stdout, "\n");
-				for (in_count = 0; i < kk_shorten; i++)
-					printf("%d", data[i]);
+				for (in_count = 0; in_count < kk_shorten; in_count++)
+					printf("%d", data[in_count]);
+				printf("\n");
+				printf("[STD]");
+				for (in_count = 0; in_count < rr; in_count++)
+					printf("%d", bb[in_count]);
 				printf("\n");
 				print_hex_low(rr, bb, stdout);
 				fprintf(stdout, "\n") ;
@@ -235,6 +245,8 @@ int main(int argc,  char** argv)
 		}
 		fprintf(stdout, "\n{### %d words encoded.}\n", in_codeword) ;
 	}
+
+	encoder(test_data, gen_code);
 	
 	return(0);
 }
@@ -242,21 +254,73 @@ int main(int argc,  char** argv)
 #define INFO_BYTE_SIZE	512
 #define INFO_BIT_SIZE	4096
 #define BCH_BYTE_SIZE	7
-#define BCH_BIT_SIZE	56
+#define BCH_BIT_SIZE	52
 
 void encoder(const unsigned char *indata, unsigned char *bch_code)
 {
 	int bin_data[INFO_BIT_SIZE];
+	int bin_data_p[parallel_max][kk_max];
 	int bin_code[BCH_BIT_SIZE];
 	int bin_code_temp[BCH_BIT_SIZE];
 
 	int loop_count;
 	int i, j, k;
+	int idx_temp;
 
 
 	/* convert indata into bits */
+	idx_temp = 0;
+	for (i = 0; i < INFO_BYTE_SIZE; i++) {
+		for (j = 7; j >= 0; j--) {
+			if ((1 << j) & indata[i])
+				bin_data[idx_temp] = 1;
+			else
+				bin_data[idx_temp] = 0;
+
+			idx_temp++;
+		}
+	}
+
+	printf("------------------------------------------------\n");
+	for (i = 0; i < INFO_BIT_SIZE; i++) {
+		printf("%d", bin_data[i]);
+	}
+	printf("\n");
 
 	/* encode loop procedure */
+	loop_count = (INFO_BIT_SIZE + Parallel - 1) / Parallel;
+
+	for (i = 0; i < Parallel; i++) {
+		for (j = 0; j < loop_count; j++) {
+			if (i + j * Parallel < INFO_BIT_SIZE)
+				bin_data_p[i][j] = bin_data[i + j * Parallel];
+			else
+				bin_data_p[i][j] = 0;
+		}
+	}
+
+	for (i = 0; i < BCH_BIT_SIZE; i++)
+		bin_code[i] = 0;
+
+	for (k = loop_count - 1; k >= 0; k--) {
+		for (i = 0; i < BCH_BIT_SIZE; i++)
+			bin_code_temp[i] = bin_code[i];
+		for (i = Parallel - 1; i >= 0; i--)
+			bin_code_temp[BCH_BIT_SIZE - Parallel + i] = bin_code_temp[BCH_BIT_SIZE - Parallel + i] ^ bin_data_p[i][k];
+
+		for (i = 0; i < BCH_BIT_SIZE; i++) {
+			idx_temp = 0;
+			for (j = 0; j < BCH_BIT_SIZE; j++)
+				idx_temp = idx_temp ^ (bin_code_temp[j] * T_G_R[i][j]);
+			bin_code[i] = idx_temp;
+		}
+	}
+
+	printf("[MY]");
+	for (i = 0; i < BCH_BIT_SIZE; i++)
+		printf("%d", bin_code[i]);
+	printf("\n");
+
 
 	/* convert & save bch code into output buffer */
 }
