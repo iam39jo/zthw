@@ -323,4 +323,25 @@ void encoder(const unsigned char *indata, unsigned char *bch_code)
 
 
 	/* convert & save bch code into output buffer */
+	idx_temp = 0;
+	for (i = 0; i < BCH_BYTE_SIZE - 1; i++) {
+		bch_code[i] = 0;
+		for (j = 7; j >= 0; j--) {
+			if (bin_code[idx_temp])
+				 bch_code[i] += (1 << j);
+			idx_temp++;
+		}
+	}
+	/* the last 4 bits */
+	bch_code[BCH_BYTE_SIZE-1] = 0;
+	for (i = 3; i >= 0; i--) {
+		if (bin_code[idx_temp])
+			bch_code[BCH_BYTE_SIZE-1] += (1 << i);
+		idx_temp++;
+	}
+
+	for (i = 0; i < BCH_BYTE_SIZE; i++)
+		printf("%02X", bch_code[i]);
+	printf("\n");
+
 }
