@@ -514,6 +514,7 @@ int decoder(const unsigned char *indata, const unsigned char *bch_code)
 	int desc[BCH_EC_CAPA_X2+4];		// Discrepancy 'mu'th discrepancy
 	int u;		// u = 'mu' + 1 and u ranges from -1 to 2*t (see L&C)
 	int q;				//
+	int err_count;
 
 	int Temp, loop_count;
 	int bin_code[BCH_BIT_SIZE];
@@ -604,6 +605,125 @@ int decoder(const unsigned char *indata, const unsigned char *bch_code)
 	}
 
 	/* decode */
+
+	// no errors
+	if (!syn_error) {
+		return 0;
+	}
+
+	for (i = 1; i <= BCH_EC_CAPA_X2; i++)
+		s[i] = index_of[s[i]];
+
+	desc[0] = 0;
+	desc[1] = s[1];
+	elp[0][0] = 1;
+	elp[1][0] = 1;
+	for (i = 1; i < BCH_EC_CAPA_X2; i++) {
+		elp[0][i] = 0;
+		elp[1][i] = 0;
+	}
+	L[0] = 0;
+	L[1] = 0;
+	u_L[0] = -1;
+	u_L[1] = 0;
+	u = -1;
+
+	do {
+		u += 2;
+
+		if (desc[u] == -1) {
+			L[u+2] = L[u];
+			for (i = 0; i <= L[u]; i++)
+				elp[u+2][i] = elp[u][i];
+		} else {
+			q = u - 2;
+			if (q < 0)	q = 0;
+			while ((desc[q] == -1) && (q > 0))
+				q = q-2;
+			if (q < 0)	q = 0;
+
+			if (q > 0) {
+				j = q;
+				do {
+					j = j-2;
+					if (j < 0) j= 0;
+					if ((desc[j] != -1) && (u_L[q] < u_L[j]))
+						q = j;
+				} while (j > 0);
+			}
+
+			if (L[u] > L[q] + u - q)
+				L[u + 2] = L[u];
+			else
+				L[u + 2] = L[q] + u - q;
+
+			for (i = 0; i < BCH_EC_CAPA_X2; i++)
+				elp[u + 2][i] = 0;
+			for (i = 0; i <= L[q]; i++)
+				if (elp[q][i] != 0)
+					elp[u+2][i+u-q] = alpha_to[(desc[u] + BCH_NN - desc[q] + index_of[elp[q][i]]) % BCH_NN];
+			for (i = 0; i <= L[u]; i++)
+				elp[u + 2][i] ^= elp[u][i];
+		}
+		u_L[u+2] = u+1 - L[u+2];
+
+
+		if (u < BCH_EC_CAPA_X2) {
+			if (s[u+2] != -1)
+				desc[u+2] = alpha_to[s[u+2]];
+			else
+				desc[u+2] = 0;
+
+			for (i = 1; i <= L[u+2]; i++)
+				if ((s[u+2-i] != -1) && (elp[u+2][i] != 0))
+					desc[u+2] ^= alpha_to[(s[u+2-i] + index_of[elp[u+2][i]]) % BCH_NN];
+			desc[u+2] = index_of[desc[u+2]];
+		}
+
+	} while ((u < (BCH_EC_CAPA_X2 - 1)) && (L[u+2] <= BCH_EC_CAPA));
+
+	u += 2;
+	L[BCH_EC_CAPA_X2-1] = L[u];
+
+	// Cannot recover the errors
+	if (L[BCH_EC_CAPA_X2-1] > BCH_EC_CAPA)
+		return -1;
+
+	// recover the errors
+	
+	for (i = 1; i <= L[BCH_EC_CAPA_X2 - 1]; i++) {
+		reg[i] = index_of[elp[u][i]];
+	}
+	err_count = 0;
+
+	for (i = 1; i <= BCH_NN; i++) {
+		elp_sum = 1;
+		for (j = 1; j <= L[BCH_EC_CAPA_X2 - 1]; j++)
+			if (reg[j] != -1) {
+				reg[j] = (reg[j] + j) % BCH_NN;
+				elp_sum ^= alpha_to[reg[j]];
+			}
+
+		if (!elp_sum) {
+			location[count] = BCH_NN - i;
+			count++;
+		}
+	}
+
+	if (count == L[BCH_EC_CAPA_X2 - 1]) {
+		for (i = 0; i < L[BCH_EC_CAPA_X2 - 1]; i++)
+			bin_recd[location[i]] ^= 1;
+		return count;
+	} else {
+		return -1;
+	}
+}
+
+
+
+
+
+
 
 	return 0;
 }
