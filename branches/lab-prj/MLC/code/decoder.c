@@ -100,10 +100,6 @@ void parallel_syndrome() {
 		for (i = 0; i < Parallel; i++)
 			bb[i] = bb[i] ^ data_p[i][iii];
 	}
-	printf("bin_code: ");
-	for (i = 0; i < rr; i++)
-		printf("%d", bb[i]);
-	printf("\n");
 	
 	// Computation 2t syndromes based on S(x)
 	// Odd syndromes
@@ -309,6 +305,9 @@ void decode_bch() {
 					count++ ;
 				}
 			}
+
+			for (i = 0; i < count; i++)
+				printf("At %d\n", location[i]);
 			
 			// Number of roots = degree of elp hence <= tt errors
 			if (count == L[ttx2-1]) {   
@@ -606,10 +605,6 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 			bin_code[i] = bin_code[i] ^ bin_data_p[i][k];
 	}
 
-	printf("bin_code: ");
-	for (i = 0; i < BCH_BIT_SIZE; i++)
-		printf("%d", bin_code[i]);
-	printf("\n");
 
 	syn_error = 0;
 	for (i = 1; i < BCH_EC_CAPA_X2; i += 2) {
@@ -738,6 +733,9 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 	}
 
 	printf("error count = %d\n", err_count);
+	for (i = 0; i < err_count; i++) {
+		printf("At %d\n", location[i]);
+	}
 
 	if (err_count == L[BCH_EC_CAPA_X2 - 1]) {
 		for (i = 0; i < L[BCH_EC_CAPA_X2 - 1]; i++)
@@ -750,6 +748,7 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 			for (j = 7; j >= 0; j--) {
 				if (bin_recd[idx_temp])
 					Temp += (1 << j);
+				idx_temp++;
 			}
 
 			indata[i] = Temp;

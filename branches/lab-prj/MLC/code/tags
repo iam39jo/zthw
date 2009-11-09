@@ -4,18 +4,18 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-BCH_BIT_SIZE	decoder.c	516;"	d	file:
+BCH_BIT_SIZE	decoder.c	521;"	d	file:
 BCH_BIT_SIZE	encoder.c	257;"	d	file:
-BCH_BYTE_SIZE	decoder.c	515;"	d	file:
+BCH_BYTE_SIZE	decoder.c	520;"	d	file:
 BCH_BYTE_SIZE	encoder.c	256;"	d	file:
-BCH_EC_CAPA	decoder.c	517;"	d	file:
-BCH_EC_CAPA_X2	decoder.c	518;"	d	file:
-BCH_NN	decoder.c	519;"	d	file:
+BCH_EC_CAPA	decoder.c	522;"	d	file:
+BCH_EC_CAPA_X2	decoder.c	523;"	d	file:
+BCH_NN	decoder.c	524;"	d	file:
 DEBUG	BCH_Global.c	64;"	d	file:
 DEBUG	bch_global.c	64;"	d	file:
-INFO_BIT_SIZE	decoder.c	514;"	d	file:
+INFO_BIT_SIZE	decoder.c	519;"	d	file:
 INFO_BIT_SIZE	encoder.c	255;"	d	file:
-INFO_BYTE_SIZE	decoder.c	513;"	d	file:
+INFO_BYTE_SIZE	decoder.c	518;"	d	file:
 INFO_BYTE_SIZE	encoder.c	254;"	d	file:
 Parallel	BCH_Global.c	/^int Parallel ;			\/\/ Parallel processing$/;"	v
 Parallel	bch_global.c	/^int Parallel ;			\/\/ Parallel processing$/;"	v
