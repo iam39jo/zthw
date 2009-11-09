@@ -45,6 +45,7 @@
 
 #include "BCH_Global.c"
 #include "data.h"
+#include "bch_static_data.h"
 
 int bb[rr_max] ;		// Parity checks
 
@@ -312,7 +313,7 @@ void encoder(const unsigned char *indata, unsigned char *bch_code)
 		for (i = 0; i < BCH_BIT_SIZE; i++) {
 			idx_temp = 0;
 			for (j = 0; j < BCH_BIT_SIZE; j++)
-				idx_temp = idx_temp ^ (bin_code_temp[j] * T_G_R[i][j]);
+				idx_temp = idx_temp ^ (bin_code_temp[j] * bch_T_G_R[i][j]);
 			bin_code[i] = idx_temp;
 		}
 	}
