@@ -255,6 +255,7 @@ int main(int argc,  char** argv)
 #define INFO_BIT_SIZE	4096
 #define BCH_BYTE_SIZE	7
 #define BCH_BIT_SIZE	52
+#define BCH_PARALLEL	8
 
 void encoder(const unsigned char *indata, unsigned char *bch_code)
 {

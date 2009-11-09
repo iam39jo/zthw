@@ -46,6 +46,7 @@
 
 #include "BCH_Global.c"
 #include "data.h"
+#include "bch_static_data.h"
 
 int bb[rr_max] ;	// Syndrome polynomial
 int s[rr_max];		// Syndrome values
@@ -505,6 +506,37 @@ int main(int argc,  char** argv)
 		fprintf(stdout, " }\n");
 	}
 
+		/*fprintf(stderr, "TGR\n");*/
+	/*for (i = 0; i < 52; i++) {*/
+		/*fprintf(stderr, "\t{");*/
+		/*for (j = 0; j < 52; j++) {*/
+			/*fprintf(stderr, "%d, ", T_G_R[i][j]);*/
+		/*}*/
+		/*fprintf(stderr, "},\n");*/
+	/*}*/
+		/*fprintf(stderr, "\n");*/
+
+		/*fprintf(stderr, "index_of\n");*/
+	/*j = 0;*/
+	/*for (i = 0; i < 8200; i++, j++) {*/
+		/*fprintf(stderr, "%d, ", index_of[i]);*/
+		/*if (j == 20) {*/
+			/*fprintf(stderr, "\n\t");*/
+			/*j = 0;*/
+		/*}*/
+	/*}*/
+		/*fprintf(stderr, "\n");*/
+		/*fprintf(stderr, "alpha_to\n");*/
+
+	/*j = 0;*/
+	/*for (i = 0; i < 8200; i++, j++) {*/
+		/*fprintf(stderr, "%d, ", alpha_to[i]);*/
+		/*if (j == 20) {*/
+			/*fprintf(stderr, "\n\t");*/
+			/*j = 0;*/
+		/*}*/
+	/*}*/
+
 	decoder(test_data, gen_code);
 
 	for (i = 0; i < 512; i++) {
@@ -522,6 +554,7 @@ int main(int argc,  char** argv)
 #define BCH_EC_CAPA		4
 #define BCH_EC_CAPA_X2	8
 #define BCH_NN			8191
+#define BCH_PARALELL	8
 
 int decoder(unsigned char *indata, const unsigned char *bch_code)
 {
@@ -593,7 +626,7 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 		for (i = 0; i < BCH_BIT_SIZE; i++) {
 			Temp = 0;
 			for (j = 0; j < BCH_BIT_SIZE; j++)
-				if (bin_code[j] != 0 && T_G_R[i][j] != 0)
+				if (bin_code[j] != 0 && bch_T_G_R[i][j] != 0)
 					Temp ^= 1;
 			bin_code_temp[i] = Temp;
 		}
@@ -611,7 +644,7 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 		s[i] = 0;
 		for (j = 0; j < BCH_BIT_SIZE; j++)
 			if (bin_code[j])
-				s[i] ^= alpha_to[(index_of[bin_code[j]] + i*j) % BCH_NN];
+				s[i] ^= bch_alpha_to[(bch_index_of[bin_code[j]] + i*j) % BCH_NN];
 		if (s[i] != 0)
 			syn_error = 1;
 	}
@@ -622,7 +655,7 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 		if (s[j] == 0)
 			s[i] = 0;
 		else
-			s[i] = alpha_to[(2 * index_of[s[j]]) % BCH_NN];
+			s[i] = bch_alpha_to[(2 * bch_index_of[s[j]]) % BCH_NN];
 	}
 
 	/* decode */
@@ -634,7 +667,7 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 	}
 
 	for (i = 1; i <= BCH_EC_CAPA_X2; i++)
-		s[i] = index_of[s[i]];
+		s[i] = bch_index_of[s[i]];
 
 	desc[0] = 0;
 	desc[1] = s[1];
@@ -683,7 +716,7 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 				elp[u + 2][i] = 0;
 			for (i = 0; i <= L[q]; i++)
 				if (elp[q][i] != 0)
-					elp[u+2][i+u-q] = alpha_to[(desc[u] + BCH_NN - desc[q] + index_of[elp[q][i]]) % BCH_NN];
+					elp[u+2][i+u-q] = bch_alpha_to[(desc[u] + BCH_NN - desc[q] + bch_index_of[elp[q][i]]) % BCH_NN];
 			for (i = 0; i <= L[u]; i++)
 				elp[u + 2][i] ^= elp[u][i];
 		}
@@ -692,14 +725,14 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 
 		if (u < BCH_EC_CAPA_X2) {
 			if (s[u+2] != -1)
-				desc[u+2] = alpha_to[s[u+2]];
+				desc[u+2] = bch_alpha_to[s[u+2]];
 			else
 				desc[u+2] = 0;
 
 			for (i = 1; i <= L[u+2]; i++)
 				if ((s[u+2-i] != -1) && (elp[u+2][i] != 0))
-					desc[u+2] ^= alpha_to[(s[u+2-i] + index_of[elp[u+2][i]]) % BCH_NN];
-			desc[u+2] = index_of[desc[u+2]];
+					desc[u+2] ^= bch_alpha_to[(s[u+2-i] + bch_index_of[elp[u+2][i]]) % BCH_NN];
+			desc[u+2] = bch_index_of[desc[u+2]];
 		}
 
 	} while ((u < (BCH_EC_CAPA_X2 - 1)) && (L[u+2] <= BCH_EC_CAPA));
@@ -714,7 +747,7 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 	// recover the errors
 	
 	for (i = 1; i <= L[BCH_EC_CAPA_X2 - 1]; i++) {
-		reg[i] = index_of[elp[u][i]];
+		reg[i] = bch_index_of[elp[u][i]];
 	}
 	err_count = 0;
 
@@ -723,7 +756,7 @@ int decoder(unsigned char *indata, const unsigned char *bch_code)
 		for (j = 1; j <= L[BCH_EC_CAPA_X2 - 1]; j++)
 			if (reg[j] != -1) {
 				reg[j] = (reg[j] + j) % BCH_NN;
-				elp_sum ^= alpha_to[reg[j]];
+				elp_sum ^= bch_alpha_to[reg[j]];
 			}
 
 		if (!elp_sum) {
