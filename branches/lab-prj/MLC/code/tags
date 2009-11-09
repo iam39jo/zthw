@@ -4,19 +4,45 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-BCH_BIT_SIZE	decoder.c	521;"	d	file:
-BCH_BIT_SIZE	encoder.c	257;"	d	file:
-BCH_BYTE_SIZE	decoder.c	520;"	d	file:
-BCH_BYTE_SIZE	encoder.c	256;"	d	file:
-BCH_EC_CAPA	decoder.c	522;"	d	file:
-BCH_EC_CAPA_X2	decoder.c	523;"	d	file:
-BCH_NN	decoder.c	524;"	d	file:
+BCH_BIT_SIZE	decoder.c	553;"	d	file:
+BCH_BIT_SIZE	ecc_bch_decoder.c	53;"	d	file:
+BCH_BIT_SIZE	ecc_bch_encoder.c	53;"	d	file:
+BCH_BIT_SIZE	encoder.c	258;"	d	file:
+BCH_BIT_SIZE	nand_ecc_bch.c	7;"	d	file:
+BCH_BYTE_SIZE	decoder.c	552;"	d	file:
+BCH_BYTE_SIZE	ecc_bch_decoder.c	52;"	d	file:
+BCH_BYTE_SIZE	ecc_bch_encoder.c	52;"	d	file:
+BCH_BYTE_SIZE	encoder.c	257;"	d	file:
+BCH_BYTE_SIZE	nand_ecc_bch.c	6;"	d	file:
+BCH_EC_CAPA	decoder.c	554;"	d	file:
+BCH_EC_CAPA	ecc_bch_decoder.c	54;"	d	file:
+BCH_EC_CAPA	nand_ecc_bch.c	8;"	d	file:
+BCH_EC_CAPA_X2	decoder.c	555;"	d	file:
+BCH_EC_CAPA_X2	ecc_bch_decoder.c	55;"	d	file:
+BCH_EC_CAPA_X2	nand_ecc_bch.c	9;"	d	file:
+BCH_MAX_CORRECTION	ecc_bch_decoder.c	58;"	d	file:
+BCH_MAX_CORRECTION	nand_ecc_bch.c	13;"	d	file:
+BCH_NN	decoder.c	556;"	d	file:
+BCH_NN	ecc_bch_decoder.c	56;"	d	file:
+BCH_NN	nand_ecc_bch.c	10;"	d	file:
+BCH_NN_SHORTEN	nand_ecc_bch.c	11;"	d	file:
+BCH_PARALELL	decoder.c	557;"	d	file:
+BCH_PARALELL	ecc_bch_decoder.c	57;"	d	file:
+BCH_PARALLEL	ecc_bch_encoder.c	54;"	d	file:
+BCH_PARALLEL	encoder.c	259;"	d	file:
+BCH_PARALLEL	nand_ecc_bch.c	12;"	d	file:
 DEBUG	BCH_Global.c	64;"	d	file:
 DEBUG	bch_global.c	64;"	d	file:
-INFO_BIT_SIZE	decoder.c	519;"	d	file:
-INFO_BIT_SIZE	encoder.c	255;"	d	file:
-INFO_BYTE_SIZE	decoder.c	518;"	d	file:
-INFO_BYTE_SIZE	encoder.c	254;"	d	file:
+INFO_BIT_SIZE	decoder.c	551;"	d	file:
+INFO_BIT_SIZE	ecc_bch_decoder.c	51;"	d	file:
+INFO_BIT_SIZE	ecc_bch_encoder.c	51;"	d	file:
+INFO_BIT_SIZE	encoder.c	256;"	d	file:
+INFO_BIT_SIZE	nand_ecc_bch.c	5;"	d	file:
+INFO_BYTE_SIZE	decoder.c	550;"	d	file:
+INFO_BYTE_SIZE	ecc_bch_decoder.c	50;"	d	file:
+INFO_BYTE_SIZE	ecc_bch_encoder.c	50;"	d	file:
+INFO_BYTE_SIZE	encoder.c	255;"	d	file:
+INFO_BYTE_SIZE	nand_ecc_bch.c	4;"	d	file:
 Parallel	BCH_Global.c	/^int Parallel ;			\/\/ Parallel processing$/;"	v
 Parallel	bch_global.c	/^int Parallel ;			\/\/ Parallel processing$/;"	v
 T_G	BCH_Global.c	/^int T_G[rr_max][rr_max], T_G_R[rr_max][rr_max];		\/\/ Parallel lookahead table$/;"	v
@@ -33,6 +59,17 @@ bb	bch_decoder.c	/^int bb[rr_max] ;	\/\/ Syndrome polynomial$/;"	v
 bb	bch_encoder.c	/^int bb[rr_max] ;		\/\/ Parity checks$/;"	v
 bb	decoder.c	/^int bb[rr_max] ;	\/\/ Syndrome polynomial$/;"	v
 bb	encoder.c	/^int bb[rr_max] ;		\/\/ Parity checks$/;"	v
+bch_T_G_R	bch_static_data.h	/^int bch_T_G_R[52][52] = {$/;"	v
+bch_alpha_to	bch_static_data.h	/^int bch_alpha_to[8200] = {$/;"	v
+bch_decoder	ecc_bch_decoder.c	/^int bch_decoder(unsigned char *indata, const unsigned char *bch_code)$/;"	f	signature:(unsigned char *indata, const unsigned char *bch_code)
+bch_decoder	ecc_bch_decoder.c	/^int bch_decoder(unsigned char *indata, const unsigned char *bch_code);$/;"	p	file:	signature:(unsigned char *indata, const unsigned char *bch_code)
+bch_decoder	nand_ecc_bch.c	/^int bch_decoder(unsigned char *indata, const unsigned char *bch_code)$/;"	f	signature:(unsigned char *indata, const unsigned char *bch_code)
+bch_decoder	nand_ecc_bch.c	/^int bch_decoder(unsigned char *indata, const unsigned char *bch_code);$/;"	p	file:	signature:(unsigned char *indata, const unsigned char *bch_code)
+bch_decoder	nand_ecc_bch.h	/^int bch_decoder(unsigned char *indata, const unsigned char *bch_code);$/;"	p	signature:(unsigned char *indata, const unsigned char *bch_code)
+bch_encoder	nand_ecc_bch.c	/^void bch_encoder(const unsigned char *indata, unsigned char *bch_code)$/;"	f	signature:(const unsigned char *indata, unsigned char *bch_code)
+bch_encoder	nand_ecc_bch.c	/^void bch_encoder(const unsigned char *indata, unsigned char *bch_code);$/;"	p	file:	signature:(const unsigned char *indata, unsigned char *bch_code)
+bch_encoder	nand_ecc_bch.h	/^void bch_encoder(const unsigned char *indata, unsigned char *bch_code);$/;"	p	signature:(const unsigned char *indata, unsigned char *bch_code)
+bch_index_of	bch_static_data.h	/^int bch_index_of[8200] = {$/;"	v
 codeword	error.c	/^int codeword[16 * kk_max] ;	\/\/ Incoming data$/;"	v
 count	bch_decoder.c	/^int count;		\/\/ Number of errors$/;"	v
 count	decoder.c	/^int count;		\/\/ Number of errors$/;"	v
@@ -51,6 +88,9 @@ df_p	BCH_Global.c	/^int df_p = 8;              	\/\/ Number of substreams to cal
 df_p	bch_global.c	/^int df_p = 8;              	\/\/ Number of substreams to calculate in parallel$/;"	v
 df_t	BCH_Global.c	/^int df_t = 4;              	\/\/ Number of errors that can be corrected$/;"	v
 df_t	bch_global.c	/^int df_t = 4;              	\/\/ Number of errors that can be corrected$/;"	v
+encoder	ecc_bch_decoder.c	/^void encoder(const unsigned char *indata, unsigned char *bch_code)$/;"	f	signature:(const unsigned char *indata, unsigned char *bch_code)
+encoder	ecc_bch_decoder.c	/^void encoder(const unsigned char *indata, unsigned char *bch_code);$/;"	p	file:	signature:(const unsigned char *indata, unsigned char *bch_code)
+encoder	ecc_bch_encoder.c	/^void encoder(const unsigned char *indata, unsigned char *bch_code)$/;"	f	signature:(const unsigned char *indata, unsigned char *bch_code)
 encoder	encoder.c	/^void encoder(const unsigned char *indata, unsigned char *bch_code)$/;"	f	signature:(const unsigned char *indata, unsigned char *bch_code)
 gen_code	data.h	/^unsigned char gen_code[8] = {0xD0, 0x9F, 0xCE, 0xC5, 0xFF, 0xF9, 0x06};$/;"	v
 gen_poly	BCH_Global.c	/^void gen_poly()$/;"	f
@@ -79,6 +119,7 @@ main	data_generator.c	/^int main(int argc,  char** argv)$/;"	f	signature:(int ar
 main	decoder.c	/^int main(int argc,  char** argv)$/;"	f	signature:(int argc, char** argv)
 main	encoder.c	/^int main(int argc,  char** argv)$/;"	f	signature:(int argc, char** argv)
 main	error.c	/^int main(int argc,  char** argv)$/;"	f	signature:(int argc, char** argv)
+main	test_main.c	/^int main()$/;"	f
 mm	BCH_Global.c	/^int mm, nn, kk, tt, rr;		\/\/ BCH code parameters$/;"	v
 mm	bch_global.c	/^int mm, nn, kk, tt, rr;		\/\/ BCH code parameters$/;"	v
 mm_max	BCH_Global.c	58;"	d	file:

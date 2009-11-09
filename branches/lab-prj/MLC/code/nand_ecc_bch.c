@@ -28,7 +28,7 @@ int bch_decoder(unsigned char *indata, const unsigned char *bch_code)
 	int q;				//
 	int err_count;
 	int location[BCH_MAX_CORRECTION];	// Error location
-	int s[BCH_BIT_SIZE];		// Syndrome values
+	int s[1000];		// Syndrome values
 
 	int Temp, loop_count;
 	int bin_code[BCH_BIT_SIZE];
@@ -111,7 +111,6 @@ int bch_decoder(unsigned char *indata, const unsigned char *bch_code)
 		if (s[i] != 0)
 			syn_error = 1;
 	}
-	printf("Syn_error = %d\n", syn_error);
 
 	for (i = 2; i <= BCH_EC_CAPA_X2; i += 2) {
 		j = i / 2;
@@ -129,7 +128,6 @@ int bch_decoder(unsigned char *indata, const unsigned char *bch_code)
 		return 0;
 	}
 
-	printf("%s %d %s\n", __FILE__, __LINE__, __FUNCTION__);
 	for (i = 1; i <= BCH_EC_CAPA_X2; i++)
 		s[i] = bch_index_of[s[i]];
 
