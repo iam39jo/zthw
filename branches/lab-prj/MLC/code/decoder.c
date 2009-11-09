@@ -45,6 +45,7 @@
 /*******************************************************************************/
 
 #include "BCH_Global.c"
+#include "data.h"
 
 int bb[rr_max] ;	// Syndrome polynomial
 int s[rr_max];		// Syndrome values
@@ -61,6 +62,10 @@ void parallel_syndrome() {
  */
 	int i, j, iii, Temp, bb_temp[rr_max] ;
 	int loop_count ;
+
+	for (i = 0; i < 4148; i++)
+		printf("%d", recd[i]);
+	printf("\n");
 
 	// Determine the number of loops required for parallelism.  
 	loop_count = ceil(nn_shorten / (double)Parallel) ;
@@ -95,6 +100,10 @@ void parallel_syndrome() {
 		for (i = 0; i < Parallel; i++)
 			bb[i] = bb[i] ^ data_p[i][iii];
 	}
+	printf("bin_code: ");
+	for (i = 0; i < rr; i++)
+		printf("%d", bb[i]);
+	printf("\n");
 	
 	// Computation 2t syndromes based on S(x)
 	// Odd syndromes
@@ -107,6 +116,7 @@ void parallel_syndrome() {
 		if (s[i] != 0)
 			syn_error = 1 ;	// set flag if non-zero syndrome => error
     	}
+	printf("Syn_error = %d\n", syn_error);
 
 	// Even syndrome = (Odd syndrome) ** 2
 	for (i = 2; i <= ttx2; i = i + 2) {
@@ -116,6 +126,7 @@ void parallel_syndrome() {
 		else
 			s[i] =  alpha_to[(2 * index_of[s[j]]) % nn];
 	}
+	printf("Syn_error = %d\n", syn_error);
 	
 	if (Verbose) {
 		fprintf(stdout, "# The syndrome from parallel decoder is:\n") ;
@@ -322,6 +333,8 @@ int main(int argc,  char** argv)
 	int code_success[kk_max], code_fail[kk_max];	// Decoded and failed words
 	int codeword[kk_max], recd_data[kk_max], recd_parity[kk_max] ;
 	char in_char;
+
+	freopen("data_codeword.txt", "r", stdin);
 	
 	fprintf(stderr, "# Binary BCH decoder.  Use -h for details.\n\n");
 	
@@ -492,6 +505,13 @@ int main(int argc,  char** argv)
 			fprintf(stdout, " %d", code_fail[i]);
 		fprintf(stdout, " }\n");
 	}
+
+	decoder(test_data, gen_code);
+
+	for (i = 0; i < 512; i++) {
+		printf("%02X", test_data[i]);
+	}
+	printf("\n");
 	
 	return(0);
 }
@@ -504,7 +524,7 @@ int main(int argc,  char** argv)
 #define BCH_EC_CAPA_X2	8
 #define BCH_NN			8191
 
-int decoder(const unsigned char *indata, const unsigned char *bch_code)
+int decoder(unsigned char *indata, const unsigned char *bch_code)
 {
 	int elp_sum;
 	int L[BCH_EC_CAPA_X2+3];			// Degree of ELP 
@@ -563,9 +583,9 @@ int decoder(const unsigned char *indata, const unsigned char *bch_code)
 	for (i = 0; i < Parallel; i++)
 		for (j = 0; j < loop_count; j++)
 			if (i + j * Parallel < nn_shorten)
-				data_p[i][j] = bin_recd[i + j * Parallel];
+				bin_data_p[i][j] = bin_recd[i + j * Parallel];
 			else
-				data_p[i][j] = 0;
+				bin_data_p[i][j] = 0;
 
 	for (i = 0; i < BCH_BIT_SIZE; i++)
 		bin_code[i] = 0;
@@ -586,6 +606,11 @@ int decoder(const unsigned char *indata, const unsigned char *bch_code)
 			bin_code[i] = bin_code[i] ^ bin_data_p[i][k];
 	}
 
+	printf("bin_code: ");
+	for (i = 0; i < BCH_BIT_SIZE; i++)
+		printf("%d", bin_code[i]);
+	printf("\n");
+
 	syn_error = 0;
 	for (i = 1; i < BCH_EC_CAPA_X2; i += 2) {
 		s[i] = 0;
@@ -595,6 +620,7 @@ int decoder(const unsigned char *indata, const unsigned char *bch_code)
 		if (s[i] != 0)
 			syn_error = 1;
 	}
+	printf("Syn_error = %d\n", syn_error);
 
 	for (i = 2; i <= BCH_EC_CAPA_X2; i += 2) {
 		j = i / 2;
@@ -606,6 +632,7 @@ int decoder(const unsigned char *indata, const unsigned char *bch_code)
 
 	/* decode */
 
+	printf("Syn_error = %d\n", syn_error);
 	// no errors
 	if (!syn_error) {
 		return 0;
@@ -705,25 +732,32 @@ int decoder(const unsigned char *indata, const unsigned char *bch_code)
 			}
 
 		if (!elp_sum) {
-			location[count] = BCH_NN - i;
-			count++;
+			location[err_count] = BCH_NN - i;
+			err_count++;
 		}
 	}
 
-	if (count == L[BCH_EC_CAPA_X2 - 1]) {
+	printf("error count = %d\n", err_count);
+
+	if (err_count == L[BCH_EC_CAPA_X2 - 1]) {
 		for (i = 0; i < L[BCH_EC_CAPA_X2 - 1]; i++)
 			bin_recd[location[i]] ^= 1;
-		return count;
+
+		/* recover indata */
+		idx_temp = BCH_BIT_SIZE;
+		for (i = 0; i < INFO_BYTE_SIZE; i++) {
+			Temp = 0;
+			for (j = 7; j >= 0; j--) {
+				if (bin_recd[idx_temp])
+					Temp += (1 << j);
+			}
+
+			indata[i] = Temp;
+		}
+
+		return err_count;
 	} else {
 		return -1;
 	}
 }
 
-
-
-
-
-
-
-	return 0;
-}

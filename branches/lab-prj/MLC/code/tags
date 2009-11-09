@@ -4,11 +4,18 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
+BCH_BIT_SIZE	decoder.c	516;"	d	file:
 BCH_BIT_SIZE	encoder.c	257;"	d	file:
+BCH_BYTE_SIZE	decoder.c	515;"	d	file:
 BCH_BYTE_SIZE	encoder.c	256;"	d	file:
+BCH_EC_CAPA	decoder.c	517;"	d	file:
+BCH_EC_CAPA_X2	decoder.c	518;"	d	file:
+BCH_NN	decoder.c	519;"	d	file:
 DEBUG	BCH_Global.c	64;"	d	file:
 DEBUG	bch_global.c	64;"	d	file:
+INFO_BIT_SIZE	decoder.c	514;"	d	file:
 INFO_BIT_SIZE	encoder.c	255;"	d	file:
+INFO_BYTE_SIZE	decoder.c	513;"	d	file:
 INFO_BYTE_SIZE	encoder.c	254;"	d	file:
 Parallel	BCH_Global.c	/^int Parallel ;			\/\/ Parallel processing$/;"	v
 Parallel	bch_global.c	/^int Parallel ;			\/\/ Parallel processing$/;"	v
@@ -37,6 +44,7 @@ decode_bch	bch_decoder.c	/^void decode_bch() {$/;"	f
 decode_bch	decoder.c	/^void decode_bch() {$/;"	f
 decode_flag	bch_decoder.c	/^int decode_flag;	\/\/ Decoding indicator $/;"	v
 decode_flag	decoder.c	/^int decode_flag;	\/\/ Decoding indicator $/;"	v
+decoder	decoder.c	/^int decoder(unsigned char *indata, const unsigned char *bch_code)$/;"	f	signature:(unsigned char *indata, const unsigned char *bch_code)
 df_m	BCH_Global.c	/^int df_m = 13;              	\/\/ BCH code over GF(2**mm)$/;"	v
 df_m	bch_global.c	/^int df_m = 13;              	\/\/ BCH code over GF(2**mm)$/;"	v
 df_p	BCH_Global.c	/^int df_p = 8;              	\/\/ Number of substreams to calculate in parallel$/;"	v
@@ -44,7 +52,7 @@ df_p	bch_global.c	/^int df_p = 8;              	\/\/ Number of substreams to cal
 df_t	BCH_Global.c	/^int df_t = 4;              	\/\/ Number of errors that can be corrected$/;"	v
 df_t	bch_global.c	/^int df_t = 4;              	\/\/ Number of errors that can be corrected$/;"	v
 encoder	encoder.c	/^void encoder(const unsigned char *indata, unsigned char *bch_code)$/;"	f	signature:(const unsigned char *indata, unsigned char *bch_code)
-gen_code	data.h	/^unsigned char gen_code[8];$/;"	v
+gen_code	data.h	/^unsigned char gen_code[8] = {0xD0, 0x9F, 0xCE, 0xC5, 0xFF, 0xF9, 0x06};$/;"	v
 gen_poly	BCH_Global.c	/^void gen_poly()$/;"	f
 gen_poly	bch_global.c	/^void gen_poly()$/;"	f
 generate_gf	BCH_Global.c	/^void generate_gf()$/;"	f
