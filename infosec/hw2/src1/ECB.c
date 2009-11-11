@@ -5,7 +5,7 @@
 #include <string.h>
 #include <malloc.h>
 
-#include "PlainText.h"
+#include "Text_Operations.h"
 #include "AES.h"
 
 /*#define ECB_DEBUG*/

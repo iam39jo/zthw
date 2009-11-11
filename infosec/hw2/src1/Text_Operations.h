@@ -1,5 +1,5 @@
-#ifndef __PLAINTEXT_H__
-#define __PLAINTEXT_H__
+#ifndef __TEXT_OPERATIONS_H__
+#define __TEXT_OPERATIONS_H__
 
 #include "types.h"
 
