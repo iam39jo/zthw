@@ -72,7 +72,7 @@ int ParsePlainText(const ubyte_t *text, ubyte_t **out, int length)
 				out_length = i - del_count - 1;
 				break;
 			} else {
-				fprintf(stderr, "Shouldn't reach here\n");
+				fprintf(stderr, "Shouldn't reach here 1\n");
 			}
 		}
 	}
@@ -91,7 +91,7 @@ int ParsePlainText(const ubyte_t *text, ubyte_t **out, int length)
 			} else if (text[i] == EOT) {
 				break;
 			} else {
-				fprintf(stderr, "Shouldn't reach here\n");
+				fprintf(stderr, "Shouldn't reach here 2\n");
 			}
 		} else {
 			out_temp[out_pos++] = text[i];
