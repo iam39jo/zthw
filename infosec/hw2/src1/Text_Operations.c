@@ -7,6 +7,15 @@
 #define DELIMITER 0xff
 #define EOT	0x00
 
+void XORText(ubyte_t *dest, const ubyte_t *op, int length)
+{
+	int i;
+
+	for (i = 0; i < length; i++) {
+		dest[i] ^= op[i];
+	}
+}
+
 int FormatPlainText(const ubyte_t *text, ubyte_t **out, int length)
 {
 	int i;
@@ -67,7 +76,7 @@ int ParsePlainText(const ubyte_t *text, ubyte_t **out, int length)
 			}
 		}
 	}
-	del_count /= 2;
+	out_length = i - del_count - 1;
 
 	out_temp = (ubyte_t *) malloc(sizeof(ubyte_t)*out_length + 1);
 	out_temp[out_length] = 0x00;
@@ -84,6 +93,8 @@ int ParsePlainText(const ubyte_t *text, ubyte_t **out, int length)
 			} else {
 				fprintf(stderr, "Shouldn't reach here\n");
 			}
+		} else {
+			out_temp[out_pos++] = text[i];
 		}
 	}
 	*out = out_temp;

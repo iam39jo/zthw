@@ -11,6 +11,8 @@ int main()
 	ubyte_t *c_data;
 	ubyte_t *p_data;
 	int i;
+	int c_len;
+	int p_len;
 	FILE *f1, *f2, *f3;
 
 	f1 = fopen("ORG.dat", "wb");
@@ -23,25 +25,22 @@ int main()
 		if (i % 30 == 29)
 			fprintf(f1, "\n");
 	}
-	printf("\n");
 
-	ECBEncrypt(data, test_key, &c_data, TEST_DATA_LEN);
-	printf("Encrypt done\n");
-	for (i = 0; i < TEST_DATA_LEN; i++) {
+	c_len = ECBEncrypt(data, test_key, &c_data, TEST_DATA_LEN);
+	printf("Encrypt done: %d bytes\n", c_len);
+	for (i = 0; i < c_len; i++) {
 		fprintf(f2, " %02X", c_data[i]);
 		if (i % 30 == 29)
 			fprintf(f2, "\n");
 	}
-	printf("\n");
 
-	ECBDecrypt(c_data, test_key, &p_data, TEST_DATA_LEN);
-	printf("Decrypt done\n");
-	for (i = 0; i < TEST_DATA_LEN; i++) {
-		fprintf(f3, " %02X", data[i]);
+	p_len = ECBDecrypt(c_data, test_key, &p_data, c_len);
+	printf("Decrypt done: %d bytes\n", p_len);
+	for (i = 0; i < p_len; i++) {
+		fprintf(f3, " %02X", p_data[i]);
 		if (i % 30 == 29)
 			fprintf(f3, "\n");
 	}
-	printf("\n");
 
 	fclose(f1);
 	fclose(f2);
