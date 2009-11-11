@@ -2,8 +2,15 @@
 
 #include "key.h"
 #include "ECB.h"
+#include "CBC.h"
 
 #define TEST_DATA_LEN 1024
+
+#define ECB (0)
+#define CBC (1)
+#define CFB (0)
+#define OFB (0)
+#define CTR (0)
 
 int main()
 {
@@ -26,7 +33,14 @@ int main()
 			fprintf(f1, "\n");
 	}
 
-	c_len = ECBEncrypt(data, test_key, &c_data, TEST_DATA_LEN);
+	if (ECB) {
+		c_len = ECBEncrypt(data, test_key, &c_data, TEST_DATA_LEN);
+	} else if (CBC) {
+		c_len = CBCEncrypt(data, test_key, test_V, &c_data, TEST_DATA_LEN);
+	} else if (CFB) {
+	} else if (OFB) {
+	} else if (CTR) {
+	}
 	printf("Encrypt done: %d bytes\n", c_len);
 	for (i = 0; i < c_len; i++) {
 		fprintf(f2, " %02X", c_data[i]);
@@ -34,7 +48,14 @@ int main()
 			fprintf(f2, "\n");
 	}
 
-	p_len = ECBDecrypt(c_data, test_key, &p_data, c_len);
+	if (ECB) {
+		p_len = ECBDecrypt(c_data, test_key, &p_data, c_len);
+	} else if (CBC) {
+		p_len = CBCDecrypt(c_data, test_key, test_V, &p_data, c_len);
+	} else if (CFB) {
+	} else if (OFB) {
+	} else if (CTR) {
+	}
 	printf("Decrypt done: %d bytes\n", p_len);
 	for (i = 0; i < p_len; i++) {
 		fprintf(f3, " %02X", p_data[i]);

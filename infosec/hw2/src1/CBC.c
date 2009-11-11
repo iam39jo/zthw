@@ -20,9 +20,8 @@ int CBCEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array,
 
 	ptext = *cipher;
 
-	XORText(ptext, v_array, BLOCK_BYTE_SIZE);
-
 	//encrypt the first block
+	XORText(ptext, v_array, BLOCK_BYTE_SIZE);
 	AESEncrypt(ptext, key, NB, NK, NR);
 
 	// the rest blocks
@@ -48,50 +47,14 @@ int CBCDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array
 	for (i = 0; i < block_num; ++i) {
 		AESDecrypt(ptemp+(i*BLOCK_BYTE_SIZE), key, NB, NK, NR);
 	}
-	
+
+	XORText(ptemp, v_array, BLOCK_BYTE_SIZE);
+	for (i = 1; i < block_num; ++i) {
+		XORText(ptemp+i*BLOCK_BYTE_SIZE, cipher+(i-1)*BLOCK_BYTE_SIZE, BLOCK_BYTE_SIZE);
+	}
+
 	plain_length = ParsePlainText(ptemp, plain, length);
 	free(ptemp);
 	return plain_length;
 }
 
-#ifdef ECB_DEBUG
-
-#include "key.h"
-int main()
-{
-	ubyte_t data[1024];
-	ubyte_t *c_data;
-	ubyte_t *p_data;
-	int c_len;
-	int p_len;
-	int i;
-
-	printf("ORG:\n");
-	for (i = 0; i < 1024; i++) {
-		printf(" %02X", data[i]);
-		if (!(i % 25))
-			printf("\n");
-	}
-	printf("\n");
-
-	c_len = ECBEncrypt(data, test_key, &c_data, 1024);
-	printf("C_DATA:\n");
-	for (i = 0; i < c_len; i++) {
-		printf(" %02X", c_data[i]);
-		if (!(i % 25))
-			printf("\n");
-	}
-	printf("\n");
-
-	p_len = ECBDecrypt(c_data, test_key, &p_data, 1024);
-	printf("P_DATA:\n");
-	for (i = 0; i < p_len; i++) {
-		printf(" %02X", data[i]);
-		if (!(i % 25))
-			printf("\n");
-	}
-	printf("\n");
-	return 0;
-}
-
-#endif
