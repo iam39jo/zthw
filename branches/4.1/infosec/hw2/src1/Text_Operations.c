@@ -1,7 +1,7 @@
 #include <string.h>
 #include <malloc.h>
 
-#include "PlainText.h"
+#include "Text_Operations.h"
 #include "types.h"
 
 #define DELIMITER 0xff
