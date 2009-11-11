@@ -5,6 +5,8 @@
 #include "AES.h"
 #include "types.h"
 
+/*#define AES_DEBUG*/
+
 const ubyte_t sbox[256] = {
     //0     1    2      3     4    5     6     7      8    9     A      B    C     D     E     F
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76, //0
@@ -215,7 +217,7 @@ void AddRoundKey(ubyte_t * state, ubyte_t * key, int length)
 }
 
 // key: 0,Nk  key_pool:0,Nb(Nr+1)
-void KeyExpansion(ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
+void KeyExpansion(const ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
 {
 	uword_t temp;
 	ubyte_t *ptemp = (ubyte_t *) &temp;
@@ -261,7 +263,7 @@ void KeyExpansion(ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
 }
 
 // key: 0,Nk  key_pool:0,Nb(Nr+1)
-void InvKeyExpansion(ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
+void InvKeyExpansion(const ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
 {
 	uword_t temp;
 	ubyte_t *ptemp = (ubyte_t *) &temp;
