@@ -1,8 +1,8 @@
 
-all: test
+all: aes
 
-test: AES.o ECB.o Text_Operations.o CBC.o CFB.o OFB.o CTR.o ui.o
-	gcc ui.o AES.o ECB.o Text_Operations.o CBC.o CFB.o OFB.o CTR.o -o test
+aes: AES.o ECB.o Text_Operations.o CBC.o CFB.o OFB.o CTR.o ui.o
+	gcc ui.o AES.o ECB.o Text_Operations.o CBC.o CFB.o OFB.o CTR.o -o aes
 
 clean:
-	rm -rf *.o test
+	rm -rf *.o aes

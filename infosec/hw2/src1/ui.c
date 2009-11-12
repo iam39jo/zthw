@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
+#include <time.h>
 
 #include "key.h"
 #include "ECB.h"
@@ -8,7 +9,7 @@
 #include "CFB.h"
 #include "OFB.h"
 
-#define USAGE "Usage: ./crypt -m mode -e[-d] -i in_data.txt -o out_data.txt\n\tAvailable mode: ECB/CBC/CFB/OFB/CTR"
+#define USAGE "Usage: ./aes -m mode -e[-d] -i in_data.txt -o out_data.txt\n\tAvailable mode: ECB/CBC/CFB/OFB/CTR"
 
 #define DATA_BUF 102400
 
@@ -45,6 +46,8 @@ int main(int argc, char *argv[])
 	int invalid_para;
 	char *para_temp;
 	FILE *f1, *f2, *f3;
+	double time_start;
+	double time_cost;
 
 	invalid_para = 0;
 	mode = MINVALID;
@@ -134,6 +137,8 @@ int main(int argc, char *argv[])
 		return 11;
 	}
 
+	time_start = clock();
+
 	// ENCRYPT PROCESS
 	if (direction == ENCRYPT) {
 		fprintf(stderr, "Encrypting data with %s mode...\n", getModeName(mode));
@@ -186,6 +191,10 @@ int main(int argc, char *argv[])
 		writeToFile(out_filename, p_data, p_len);
 		free(p_data);
 	}
+
+	time_cost = (clock() - time_start) / CLOCKS_PER_SEC;
+
+	fprintf(stderr, "Time cost: %lf (s)\n", time_cost);
 
 	free(org_data);
 	return 0;
