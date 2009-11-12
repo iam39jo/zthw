@@ -1,5 +1,5 @@
-#ifndef __ECB_H__
-#define __ECB_H__
+#ifndef __CBC_H__
+#define __CBC_H__
 
 #include "types.h"
 

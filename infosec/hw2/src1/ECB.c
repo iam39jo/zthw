@@ -7,6 +7,7 @@
 
 #include "Text_Operations.h"
 #include "AES.h"
+#include "ECB.h"
 
 /*#define ECB_DEBUG*/
 

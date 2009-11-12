@@ -17,6 +17,10 @@ CBCDecrypt	CBC.h	/^int CBCDecrypt(const ubyte_t *cipher, const ubyte_t *key, con
 CBCEncrypt	CBC.c	/^int CBCEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)$/;"	f	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
 CBCEncrypt	CBC.h	/^int CBCEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length);$/;"	p	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
 CFB	test_main.c	11;"	d	file:
+CFBDecrypt	CFB.c	/^int CFBDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)$/;"	f	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
+CFBDecrypt	CFB.h	/^int CFBDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length);$/;"	p	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
+CFBEncrypt	CFB.c	/^int CFBEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)$/;"	f	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
+CFBEncrypt	CFB.h	/^int CFBEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length);$/;"	p	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
 CTR	test_main.c	13;"	d	file:
 DELIMITER	Text_Operations.c	7;"	d	file:
 ECB	test_main.c	9;"	d	file:
@@ -37,13 +41,18 @@ InvKeyExpansion	AES.c	/^void InvKeyExpansion(const ubyte_t * key, ubyte_t * key_
 InvMixColumns	AES.c	/^void InvMixColumns(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
 InvShiftRows	AES.c	/^void InvShiftRows(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
 InvSubBytes	AES.c	/^void InvSubBytes(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
+J_BIT_SIZE	CFB.h	6;"	d
+J_BYTE_SIZE	CFB.h	7;"	d
 KeyExpansion	AES.c	/^void KeyExpansion(const ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)$/;"	f	signature:(const ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
 MixColumns	AES.c	/^void MixColumns(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
 NB	CBC.c	2;"	d	file:
+NB	CFB.c	2;"	d	file:
 NB	ECB.c	2;"	d	file:
 NK	CBC.c	1;"	d	file:
+NK	CFB.c	1;"	d	file:
 NK	ECB.c	1;"	d	file:
 NR	CBC.c	3;"	d	file:
+NR	CFB.c	3;"	d	file:
 NR	ECB.c	3;"	d	file:
 OFB	test_main.c	12;"	d	file:
 ParsePlainText	Text_Operations.c	/^int ParsePlainText(const ubyte_t *text, ubyte_t **out, int length)$/;"	f	signature:(const ubyte_t *text, ubyte_t **out, int length)
@@ -56,7 +65,8 @@ TEST_DATA_LEN	test_main.c	7;"	d	file:
 XORText	Text_Operations.c	/^void XORText(ubyte_t *dest, const ubyte_t *op, int length)$/;"	f	signature:(ubyte_t *dest, const ubyte_t *op, int length)
 XORText	Text_Operations.h	/^void XORText(ubyte_t *dest, const ubyte_t *op, int length);$/;"	p	signature:(ubyte_t *dest, const ubyte_t *op, int length)
 __AES_H__	AES.h	2;"	d
-__ECB_H__	CBC.h	2;"	d
+__CBC_H__	CBC.h	2;"	d
+__CFB_H__	CFB.h	2;"	d
 __ECB_H__	ECB.h	2;"	d
 __TEXT_OPERATIONS_H__	Text_Operations.h	2;"	d
 __TYPES_H__	types.h	2;"	d

@@ -7,6 +7,7 @@
 
 #include "Text_Operations.h"
 #include "AES.h"
+#include "CBC.h"
 
 /*#define CBC_DEBUG*/
 
