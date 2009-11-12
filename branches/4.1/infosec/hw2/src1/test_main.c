@@ -11,8 +11,8 @@
 #define ECB (0)
 #define CBC (0)
 #define CFB (0)
-#define OFB (1)
-#define CTR (0)
+#define OFB (0)
+#define CTR (1)
 
 int main()
 {
@@ -44,6 +44,7 @@ int main()
 	} else if (OFB) {
 		c_len = OFBEncrypt(data, test_key, test_V, &c_data, TEST_DATA_LEN);
 	} else if (CTR) {
+		c_len = CTREncrypt(data, test_key, test_V, &c_data, TEST_DATA_LEN);
 	}
 	printf("Encrypt done: %d bytes\n", c_len);
 	for (i = 0; i < c_len; i++) {
@@ -63,6 +64,7 @@ int main()
 	} else if (OFB) {
 		p_len = OFBDecrypt(c_data, test_key, test_V, &p_data, c_len);
 	} else if (CTR) {
+		p_len = CTRDecrypt(c_data, test_key, test_V, &p_data, c_len);
 	}
 	printf("Decrypt done: %d bytes\n", p_len);
 	for (i = 0; i < p_len; i++) {
