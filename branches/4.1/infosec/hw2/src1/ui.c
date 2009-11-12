@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 
 	// ENCRYPT PROCESS
 	if (direction == ENCRYPT) {
-		fprintf(stderr, "Encrypting data with %s mode...\n", getModeName(mode));
+		fprintf(stdout, "Encrypting data with %s mode...\n", getModeName(mode));
 		switch (mode) {
 			case ECB:
 				c_len = ECBEncrypt(org_data, test_key, &c_data, in_data_len);
@@ -159,14 +159,14 @@ int main(int argc, char *argv[])
 				c_len = CTREncrypt(org_data, test_key, test_V, &c_data, in_data_len);
 				break;
 		}
-		fprintf(stderr, "Encrypt finished. Cipher text length is %d\n", c_len);
+		fprintf(stdout, "Encrypt finished. Cipher text length is %d\n", c_len);
 
 		/*for (i = 0; i < c_len; i++)*/
 			/*fprintf(stdout, "%c", c_data[i]);*/
 		writeToFile(out_filename, c_data, c_len);
 		free(c_data);
 	} else {
-		fprintf(stderr, "Decrypting data with %s mode...\n", getModeName(mode));
+		fprintf(stdout, "Decrypting data with %s mode...\n", getModeName(mode));
 		switch (mode) {
 			case ECB:
 				p_len = ECBDecrypt(org_data, test_key, &p_data, in_data_len);
@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
 				p_len = CTRDecrypt(org_data, test_key, test_V, &p_data, in_data_len);
 				break;
 		}
-		fprintf(stderr, "Decrypt finished. Plain text length is %d\n", p_len);
+		fprintf(stdout, "Decrypt finished. Plain text length is %d\n", p_len);
 
 		/*for (i = 0; i < p_len; i++)*/
 			/*fprintf(stdout, "%c", p_data[i]);*/
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 
 	time_cost = (clock() - time_start) / CLOCKS_PER_SEC;
 
-	fprintf(stderr, "Time cost: %lf (s)\n", time_cost);
+	fprintf(stdout, "Time cost: %lf (s)\n", time_cost);
 
 	free(org_data);
 	return 0;
