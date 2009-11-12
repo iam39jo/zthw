@@ -3,13 +3,15 @@
 #include "key.h"
 #include "ECB.h"
 #include "CBC.h"
+#include "CFB.h"
+#include "OFB.h"
 
 #define TEST_DATA_LEN 1024
 
 #define ECB (0)
 #define CBC (0)
-#define CFB (1)
-#define OFB (0)
+#define CFB (0)
+#define OFB (1)
 #define CTR (0)
 
 int main()
@@ -40,6 +42,7 @@ int main()
 	} else if (CFB) {
 		c_len = CFBEncrypt(data, test_key, test_V, &c_data, TEST_DATA_LEN);
 	} else if (OFB) {
+		c_len = OFBEncrypt(data, test_key, test_V, &c_data, TEST_DATA_LEN);
 	} else if (CTR) {
 	}
 	printf("Encrypt done: %d bytes\n", c_len);
@@ -58,6 +61,7 @@ int main()
 	} else if (CFB) {
 		p_len = CFBDecrypt(c_data, test_key, test_V, &p_data, c_len);
 	} else if (OFB) {
+		p_len = OFBDecrypt(c_data, test_key, test_V, &p_data, c_len);
 	} else if (CTR) {
 	}
 	printf("Decrypt done: %d bytes\n", p_len);
