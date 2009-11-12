@@ -17,3 +17,4 @@ do
 	echo ""
 done
 
+rm -rf *.dat
