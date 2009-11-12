@@ -1,0 +1,61 @@
+ECB CBC CFB OFB CTR
+Testing ECB mode
+./aes -m ECB -e -i text.txt -o ECB-c.dat
+Encrypting data with ECB mode...
+Encrypt finished. Cipher text length is 439968
+Time cost: 0.420000 (s)
+./aes -m ECB -d -i text.txt -o ECB-p.dat
+Decrypting data with ECB mode...
+Decrypt finished. Plain text length is 439956
+Time cost: 3.320000 (s)
+
+ECB mode test finished
+
+Testing CBC mode
+./aes -m CBC -e -i text.txt -o CBC-c.dat
+Encrypting data with CBC mode...
+Encrypt finished. Cipher text length is 439968
+Time cost: 0.460000 (s)
+./aes -m CBC -d -i text.txt -o CBC-p.dat
+Decrypting data with CBC mode...
+Decrypt finished. Plain text length is 439956
+Time cost: 3.350000 (s)
+
+CBC mode test finished
+
+Testing CFB mode
+./aes -m CFB -e -i text.txt -o CFB-c.dat
+Encrypting data with CFB mode...
+Encrypt finished. Cipher text length is 439956
+Time cost: 6.890000 (s)
+./aes -m CFB -d -i text.txt -o CFB-p.dat
+Decrypting data with CFB mode...
+Decrypt finished. Plain text length is 439956
+Time cost: 6.850000 (s)
+
+CFB mode test finished
+
+Testing OFB mode
+./aes -m OFB -e -i text.txt -o OFB-c.dat
+Encrypting data with OFB mode...
+Encrypt finished. Cipher text length is 439956
+Time cost: 7.010000 (s)
+./aes -m OFB -d -i text.txt -o OFB-p.dat
+Decrypting data with OFB mode...
+Decrypt finished. Plain text length is 439956
+Time cost: 6.820000 (s)
+
+OFB mode test finished
+
+Testing CTR mode
+./aes -m CTR -e -i text.txt -o CTR-c.dat
+Encrypting data with CTR mode...
+Encrypt finished. Cipher text length is 439956
+Time cost: 0.430000 (s)
+./aes -m CTR -d -i text.txt -o CTR-p.dat
+Decrypting data with CTR mode...
+Decrypt finished. Plain text length is 439956
+Time cost: 0.430000 (s)
+
+CTR mode test finished
+
