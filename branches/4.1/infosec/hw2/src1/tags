@@ -11,27 +11,36 @@ AESEncrypt	AES.h	/^void AESEncrypt(ubyte_t * output, const ubyte_t * key, int Nb
 AddRoundKey	AES.c	/^void AddRoundKey(ubyte_t * state, ubyte_t * key, int length)$/;"	f	signature:(ubyte_t * state, ubyte_t * key, int length)
 BLOCK_BIT_SIZE	Text_Operations.h	6;"	d
 BLOCK_BYTE_SIZE	Text_Operations.h	7;"	d
-CBC	test_main.c	10;"	d	file:
+CBC	test_main.c	12;"	d	file:
+CBC	ui.c	/^enum CryptMode { INVALID = -1, ECB = 0, CBC, CFB, OFB, CTR } crypt_mode;$/;"	e	enum:CryptMode	file:
 CBCDecrypt	CBC.c	/^int CBCDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)$/;"	f	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
 CBCDecrypt	CBC.h	/^int CBCDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length);$/;"	p	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
 CBCEncrypt	CBC.c	/^int CBCEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)$/;"	f	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
 CBCEncrypt	CBC.h	/^int CBCEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length);$/;"	p	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
-CFB	test_main.c	11;"	d	file:
+CFB	test_main.c	13;"	d	file:
+CFB	ui.c	/^enum CryptMode { INVALID = -1, ECB = 0, CBC, CFB, OFB, CTR } crypt_mode;$/;"	e	enum:CryptMode	file:
 CFBDecrypt	CFB.c	/^int CFBDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)$/;"	f	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
 CFBDecrypt	CFB.h	/^int CFBDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length);$/;"	p	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
-CFBDecrypt	OFB.c	/^int CFBDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)$/;"	f	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
-CFBDecrypt	OFB.h	/^int CFBDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length);$/;"	p	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
 CFBEncrypt	CFB.c	/^int CFBEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)$/;"	f	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
 CFBEncrypt	CFB.h	/^int CFBEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length);$/;"	p	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
-CFBEncrypt	OFB.c	/^int CFBEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)$/;"	f	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
-CFBEncrypt	OFB.h	/^int CFBEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length);$/;"	p	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
-CTR	test_main.c	13;"	d	file:
+CTR	test_main.c	15;"	d	file:
+CTR	ui.c	/^enum CryptMode { INVALID = -1, ECB = 0, CBC, CFB, OFB, CTR } crypt_mode;$/;"	e	enum:CryptMode	file:
+CTRDecrypt	CTR.c	/^int CTRDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *counter, ubyte_t **plain, int length)$/;"	f	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *counter, ubyte_t **plain, int length)
+CTRDecrypt	CTR.h	/^int CTRDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *counter, ubyte_t **plain, int length);$/;"	p	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *counter, ubyte_t **plain, int length)
+CTREncrypt	CTR.c	/^int CTREncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *counter, ubyte_t **cipher, int length)$/;"	f	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *counter, ubyte_t **cipher, int length)
+CTREncrypt	CTR.h	/^int CTREncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *counter, ubyte_t **cipher, int length);$/;"	p	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *counter, ubyte_t **cipher, int length)
+CryptDirection	ui.c	/^enum CryptDirection { INVALID = -1, ENCRYPT = 0, DECRYPT } crypt_direction;$/;"	g	file:
+CryptMode	ui.c	/^enum CryptMode { INVALID = -1, ECB = 0, CBC, CFB, OFB, CTR } crypt_mode;$/;"	g	file:
+DATA_BUF	ui.c	12;"	d	file:
+DECRYPT	ui.c	/^enum CryptDirection { INVALID = -1, ENCRYPT = 0, DECRYPT } crypt_direction;$/;"	e	enum:CryptDirection	file:
 DELIMITER	Text_Operations.c	7;"	d	file:
-ECB	test_main.c	9;"	d	file:
+ECB	test_main.c	11;"	d	file:
+ECB	ui.c	/^enum CryptMode { INVALID = -1, ECB = 0, CBC, CFB, OFB, CTR } crypt_mode;$/;"	e	enum:CryptMode	file:
 ECBDecrypt	ECB.c	/^int ECBDecrypt(const ubyte_t *cipher, const ubyte_t *key, ubyte_t **plain, int length)$/;"	f	signature:(const ubyte_t *cipher, const ubyte_t *key, ubyte_t **plain, int length)
 ECBDecrypt	ECB.h	/^int ECBDecrypt(const ubyte_t *cipher, const ubyte_t *key, ubyte_t **plain, int length);$/;"	p	signature:(const ubyte_t *cipher, const ubyte_t *key, ubyte_t **plain, int length)
 ECBEncrypt	ECB.c	/^int ECBEncrypt(const ubyte_t *plain, const ubyte_t *key, ubyte_t **cipher, int length)$/;"	f	signature:(const ubyte_t *plain, const ubyte_t *key, ubyte_t **cipher, int length)
 ECBEncrypt	ECB.h	/^int ECBEncrypt(const ubyte_t *plain, const ubyte_t *key, ubyte_t **cipher, int length);$/;"	p	signature:(const ubyte_t *plain, const ubyte_t *key, ubyte_t **cipher, int length)
+ENCRYPT	ui.c	/^enum CryptDirection { INVALID = -1, ENCRYPT = 0, DECRYPT } crypt_direction;$/;"	e	enum:CryptDirection	file:
 EOT	Text_Operations.c	8;"	d	file:
 FormatPlainText	Text_Operations.c	/^int FormatPlainText(const ubyte_t *text, ubyte_t **out, int length)$/;"	f	signature:(const ubyte_t *text, ubyte_t **out, int length)
 FormatPlainText	Text_Operations.h	/^int FormatPlainText(const ubyte_t *text, ubyte_t **out, int length);$/;"	p	signature:(const ubyte_t *text, ubyte_t **out, int length)
@@ -41,6 +50,8 @@ GF_Mul_X9	AES.c	/^ubyte_t GF_Mul_X9(ubyte_t a)$/;"	f	signature:(ubyte_t a)
 GF_Mul_Xb	AES.c	/^ubyte_t GF_Mul_Xb(ubyte_t a)$/;"	f	signature:(ubyte_t a)
 GF_Mul_Xd	AES.c	/^ubyte_t GF_Mul_Xd(ubyte_t a)$/;"	f	signature:(ubyte_t a)
 GF_Mul_Xe	AES.c	/^ubyte_t GF_Mul_Xe(ubyte_t a)$/;"	f	signature:(ubyte_t a)
+INVALID	ui.c	/^enum CryptDirection { INVALID = -1, ENCRYPT = 0, DECRYPT } crypt_direction;$/;"	e	enum:CryptDirection	file:
+INVALID	ui.c	/^enum CryptMode { INVALID = -1, ECB = 0, CBC, CFB, OFB, CTR } crypt_mode;$/;"	e	enum:CryptMode	file:
 InvKeyExpansion	AES.c	/^void InvKeyExpansion(const ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)$/;"	f	signature:(const ubyte_t * key, ubyte_t * key_pool, int Nk, int Nb, int Nr)
 InvMixColumns	AES.c	/^void InvMixColumns(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
 InvShiftRows	AES.c	/^void InvShiftRows(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
@@ -53,37 +64,54 @@ KeyExpansion	AES.c	/^void KeyExpansion(const ubyte_t * key, ubyte_t * key_pool, 
 MixColumns	AES.c	/^void MixColumns(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
 NB	CBC.c	2;"	d	file:
 NB	CFB.c	2;"	d	file:
+NB	CTR.c	2;"	d	file:
 NB	ECB.c	2;"	d	file:
 NB	OFB.c	2;"	d	file:
 NK	CBC.c	1;"	d	file:
 NK	CFB.c	1;"	d	file:
+NK	CTR.c	1;"	d	file:
 NK	ECB.c	1;"	d	file:
 NK	OFB.c	1;"	d	file:
 NR	CBC.c	3;"	d	file:
 NR	CFB.c	3;"	d	file:
+NR	CTR.c	3;"	d	file:
 NR	ECB.c	3;"	d	file:
 NR	OFB.c	3;"	d	file:
-OFB	test_main.c	12;"	d	file:
+OFB	test_main.c	14;"	d	file:
+OFB	ui.c	/^enum CryptMode { INVALID = -1, ECB = 0, CBC, CFB, OFB, CTR } crypt_mode;$/;"	e	enum:CryptMode	file:
+OFBDecrypt	OFB.c	/^int OFBDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)$/;"	f	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
+OFBDecrypt	OFB.h	/^int OFBDecrypt(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length);$/;"	p	signature:(const ubyte_t *cipher, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **plain, int length)
+OFBEncrypt	OFB.c	/^int OFBEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)$/;"	f	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
+OFBEncrypt	OFB.h	/^int OFBEncrypt(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length);$/;"	p	signature:(const ubyte_t *plain, const ubyte_t *key, const ubyte_t *v_array, ubyte_t **cipher, int length)
 ParsePlainText	Text_Operations.c	/^int ParsePlainText(const ubyte_t *text, ubyte_t **out, int length)$/;"	f	signature:(const ubyte_t *text, ubyte_t **out, int length)
 ParsePlainText	Text_Operations.h	/^int ParsePlainText(const ubyte_t *text, ubyte_t **out, int length);$/;"	p	signature:(const ubyte_t *text, ubyte_t **out, int length)
 ROW_COUNT	AES.h	4;"	d
 Rcon	AES.c	/^const ubyte_t Rcon[] = { 0x01, 0x02, 0x04, 0x08,$/;"	v
 ShiftRows	AES.c	/^void ShiftRows(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
 SubBytes	AES.c	/^void SubBytes(unsigned char * state, int length)$/;"	f	signature:(unsigned char * state, int length)
-TEST_DATA_LEN	test_main.c	7;"	d	file:
+TEST_DATA_LEN	test_main.c	9;"	d	file:
+USAGE	ui.c	10;"	d	file:
 XORText	Text_Operations.c	/^void XORText(ubyte_t *dest, const ubyte_t *op, int length)$/;"	f	signature:(ubyte_t *dest, const ubyte_t *op, int length)
 XORText	Text_Operations.h	/^void XORText(ubyte_t *dest, const ubyte_t *op, int length);$/;"	p	signature:(ubyte_t *dest, const ubyte_t *op, int length)
 __AES_H__	AES.h	2;"	d
 __CBC_H__	CBC.h	2;"	d
 __CFB_H__	CFB.h	2;"	d
-__CFB_H__	OFB.h	2;"	d
+__CTR_H__	CTR.h	2;"	d
 __ECB_H__	ECB.h	2;"	d
+__OFB_H__	OFB.h	2;"	d
 __TEXT_OPERATIONS_H__	Text_Operations.h	2;"	d
 __TYPES_H__	types.h	2;"	d
+addCounter	CTR.c	/^void addCounter(ubyte_t *counter, int d, int length)$/;"	f	signature:(ubyte_t *counter, int d, int length)
+addCounter	CTR.c	/^void addCounter(ubyte_t *counter, int d, int length);$/;"	p	file:	signature:(ubyte_t *counter, int d, int length)
+crypt_direction	ui.c	/^enum CryptDirection { INVALID = -1, ENCRYPT = 0, DECRYPT } crypt_direction;$/;"	v	typeref:enum:CryptDirection
+crypt_mode	ui.c	/^enum CryptMode { INVALID = -1, ECB = 0, CBC, CFB, OFB, CTR } crypt_mode;$/;"	v	typeref:enum:CryptMode
+getModeName	ui.c	/^const char *getModeName(int mode)$/;"	f	signature:(int mode)
+indata_buf	ui.c	/^ubyte_t *indata_buf[DATA_BUF];$/;"	v
 inv_sbox	AES.c	/^const ubyte_t inv_sbox[256] = {$/;"	v
 main	AES.c	/^int main()$/;"	f
 main	ECB.c	/^int main()$/;"	f
 main	test_main.c	/^int main()$/;"	f
+main	ui.c	/^int main(int argc, char *argv[])$/;"	f	signature:(int argc, char *argv[])
 sbox	AES.c	/^const ubyte_t sbox[256] = {$/;"	v
 test_V	key.h	/^ubyte_t test_V[128] = {$/;"	v
 test_key	key.h	/^ubyte_t test_key[128] = {$/;"	v
