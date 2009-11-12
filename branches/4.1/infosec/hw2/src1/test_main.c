@@ -7,8 +7,8 @@
 #define TEST_DATA_LEN 1024
 
 #define ECB (0)
-#define CBC (1)
-#define CFB (0)
+#define CBC (0)
+#define CFB (1)
 #define OFB (0)
 #define CTR (0)
 
@@ -38,6 +38,7 @@ int main()
 	} else if (CBC) {
 		c_len = CBCEncrypt(data, test_key, test_V, &c_data, TEST_DATA_LEN);
 	} else if (CFB) {
+		c_len = CFBEncrypt(data, test_key, test_V, &c_data, TEST_DATA_LEN);
 	} else if (OFB) {
 	} else if (CTR) {
 	}
@@ -48,11 +49,14 @@ int main()
 			fprintf(f2, "\n");
 	}
 
+	printf("write done\n");
+
 	if (ECB) {
 		p_len = ECBDecrypt(c_data, test_key, &p_data, c_len);
 	} else if (CBC) {
 		p_len = CBCDecrypt(c_data, test_key, test_V, &p_data, c_len);
 	} else if (CFB) {
+		p_len = CFBDecrypt(c_data, test_key, test_V, &p_data, c_len);
 	} else if (OFB) {
 	} else if (CTR) {
 	}
@@ -62,6 +66,7 @@ int main()
 		if (i % 30 == 29)
 			fprintf(f3, "\n");
 	}
+	printf("write done\n");
 
 	fclose(f1);
 	fclose(f2);
